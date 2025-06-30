@@ -23,7 +23,6 @@ timestamp = datetime.datetime.now().strftime(dhms)
 #print(timestamp)
 
 parser = argparse.ArgumentParser()
-parser.add_argument('CMXX', type=int, help="specified CM##")
 parser.add_argument('file_path', type=str, help="file path to the CSV file")
 
 args = parser.parse_args()
