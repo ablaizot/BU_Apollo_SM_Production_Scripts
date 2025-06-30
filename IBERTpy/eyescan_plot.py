@@ -24,12 +24,11 @@ def get_mb(two_points):
     b = two_points[0][1] - m * two_points[0][0]
     return [m,b]
 
-def gen_mask(size,two_points,operator, mask=[]):
+def gen_mask(size, two_points, operator):
     [m, b] = get_mb(two_points)
-    if mask ==[]:
-        mask = np.ones(list(reversed(size)), dtype=bool)
-    for (y,x), value in np.ndenumerate(mask):
-        mask[y][x] &= operator(y,m*x+b)
+    mask = np.ones(list(reversed(size)), dtype=bool)
+    y, x = np.ogrid[:size[1], :size[0]]
+    mask &= operator(y, m*x + b)
     return mask
 
 def plot_mask(mask):
@@ -62,13 +61,20 @@ def gen_decagon_mask(size, x1n, x2n, x3n, y1n, y2n):
     y1 = int(round(y1n * ym))
     y2 = int(round(y2n * ym))
     yhalf = int(round(0.5 * ym))
-    points = [[x1, yhalf], [x2, ym - y2], [x3, ym - y1], [xm - x3, ym - y1], [xm - x2, ym - y2], [xm - x1, yhalf], [xm - x2, y2], [xm - x3, y1], [x3, y1], [x2, y2]]
-    pairs = zip(points, points[1:] + [points[0]])
+    points = [[x1, yhalf], [x2, ym - y2], [x3, ym - y1], [xm - x3, ym - y1], 
+              [xm - x2, ym - y2], [xm - x1, yhalf], [xm - x2, y2], 
+              [xm - x3, y1], [x3, y1], [x2, y2]]
+    pairs = list(zip(points, points[1:] + [points[0]]))  # Convert zip to list
     ops = [op.lt, op.lt, op.lt, op.lt, op.lt, op.gt, op.gt, op.gt, op.gt, op.gt]
-    mask = []
+    
+    # Initialize mask with ones
+    mask = np.ones((ym, xm), dtype=bool)
+    
+    # Apply each mask operation
     for (p, o) in zip(pairs, ops):
-        mask = gen_mask(size, p, o, mask)
-        # plot_mask(mask)
+        new_mask = gen_mask(size, p, o)
+        mask &= new_mask  # Use logical AND to combine masks
+    
     return mask
 
     # function for getting eye data
