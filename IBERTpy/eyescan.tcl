@@ -27,10 +27,11 @@ commit_hw_sio                              [get_hw_sio_links *];
 puts [date] ; exec sleep 360 ; puts [date]
 
 set scans [get_hw_sio_scans]
-
 foreach sc $scans {
     remove_hw_sio_scan $sc
 }
+unset -nocomplain ::env(PYTHONHOME)
+unset -nocomplain ::env(PYTHONPATH)
 
 set links [get_hw_sio_links]
 variable i
@@ -46,10 +47,9 @@ foreach ln $links {
     wait_on_hw_sio_scan [get_hw_sio_scans $xil_newScan]
     set fname "scan_$i.csv"
     write_hw_sio_scan -force $fname [get_hw_sio_scans $xil_newScan]
-    exec ./generate_plot.sh $fname
+    exec /usr/bin/python3 generate_plot.py $fname
     incr i 1
 }
-
 # set xil_newScan [create_hw_sio_scan -description {Scan 0} 2d_full_eye  [lindex [get_hw_sio_links get_hw_targets/0_1_0_0/IBERT/Quad_225/MGT_X0Y8/TX->get_hw_targets/0_1_0_0/IBERT/Quad_225/MGT_X0Y8/RX] 0 ]]
 # set_property HORIZONTAL_INCREMENT {2} [get_hw_sio_scans $xil_newScan]
 # set_property VERTICAL_INCREMENT {2} [get_hw_sio_scans $xil_newScan]
