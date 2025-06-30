@@ -113,27 +113,25 @@ def eyescan_plot(filename_i, filename_o, minlog10ber, colorbar=True, xaxis=True,
             
             df = pd.DataFrame()
             df['SW Version'] = [scan_list[0][1]]
-            df['GT Type'] = [scan_list[1][1]]
-            df['Date and Time Started'] = [scan_list[2][1]]
-            df['Date and Time Ended'] = [scan_list[3][1]]
+            df['Date and Time Started'] = [scan_list[1][1]]
+            df['Date and Time Ended'] = [scan_list[2][1]]
 
             df2 = pd.DataFrame()
-            df2['Reset RX'] = [scan_list[6][1]]
-            df2['OA'] = [scan_list[7][1]]
-            df2['HO'] = [scan_list[8][1]]
-            df2['HO(%)'] = [scan_list[9][1]]
-            df2['VO'] = [scan_list[10][1]]
-            df2['VO(%)'] = [scan_list[11][1]]
+            df2['Reset RX'] = [scan_list[5][1]]
+            df2['OA'] = [scan_list[6][1]]
+            df2['HO'] = [scan_list[7][1]]
+            df2['HO(%)'] = [scan_list[8][1]]
+            df2['VO'] = [scan_list[9][1]]
+            df2['VO(%)'] = [scan_list[10][1]]
 
             df3 = pd.DataFrame()
-            df3['Dwell Type'] = [scan_list[12][1]]
-            df3['Dwell BER'] = [scan_list[13][1]]
-            df3['Horizontal Inc.'] = [scan_list[15][1]]
-            df3['Vertical Inc.'] = [scan_list[17][1]]
-            try:
-                df3['Misc Info'] = [scan_list[19][1]]
-            except IndexError:
-                df3['Misc Info'] = ['']
+            df3['Dwell Type'] = [scan_list[11][1]]
+            df3['Dwell BER'] = [scan_list[12][1]]
+            df3['Horizontal Inc.'] = [scan_list[14][1]]
+            df3['Horizontal Range'] = [scan_list[15][1]]
+            df3['Vertical Inc.'] = [scan_list[16][1]]
+            df3['Vertical Range'] = [scan_list[17][1]]
+            df3['Misc Info'] = [scan_list[18][1]]
     # getting xticks and yticks
 
                 
@@ -209,6 +207,7 @@ def eyescan_plot(filename_i, filename_o, minlog10ber, colorbar=True, xaxis=True,
 
     # showing plot if needed
     #plt.show()
+    # Create PDF report
     pdf = FPDF()
     pdf.add_page()
     pdf.set_xy(0, 0)
@@ -217,22 +216,22 @@ def eyescan_plot(filename_i, filename_o, minlog10ber, colorbar=True, xaxis=True,
     pdf.cell(75, 10, " ", 0, 2, 'C')
     pdf.cell(90, 10, filename_o.strip(".pdf").split("/")[-1], 0, 2, 'C')
     pdf.ln(2)
+
+    # First table - Basic Info
     pdf.cell(30, 8, 'SW Version', 1, 0, 'C')
-    pdf.cell(30, 8, 'GT Type', 1, 0, 'C')
     pdf.cell(70, 8, 'Date and Time Started', 1, 0, 'C')
-    pdf.cell(60, 8, 'Date and Time Ended', 1, 0, 'C')
+    pdf.cell(70, 8, 'Date and Time Ended', 1, 0, 'C')
     pdf.ln(8)
     pdf.set_font('arial', '', 10)
     for i in range(0, len(df)):
         pdf.cell(30, 8, '%s' % (str(df['SW Version'].iloc[i])), 1, 0, 'C')
-        pdf.cell(30, 8, '%s' % (str(df['GT Type'].iloc[i])), 1, 0, 'C')
         pdf.cell(70, 8, '%s' % (str(df['Date and Time Started'].iloc[i])), 1, 0, 'C')
-        pdf.cell(60, 8, '%s' % (str(df['Date and Time Ended'].iloc[i])), 1, 0, 'C')
-        
+        pdf.cell(70, 8, '%s' % (str(df['Date and Time Ended'].iloc[i])), 1, 0, 'C')
+        pdf.ln(8)
 
-    pdf.ln(10)
+    # Second table - Performance Metrics
+    pdf.ln(2)
     pdf.set_font('arial', 'B', 12)
-    pdf.cell(75, 10, " ", 0, 2, 'C')
     pdf.cell(30, 8, 'Reset RX', 1, 0, 'C')
     pdf.cell(30, 8, 'OA', 1, 0, 'C')
     pdf.cell(35, 8, 'HO', 1, 0, 'C')
@@ -248,34 +247,33 @@ def eyescan_plot(filename_i, filename_o, minlog10ber, colorbar=True, xaxis=True,
         pdf.cell(35, 8, '%s' % (str(df2['HO(%)'].iloc[i])), 1, 0, 'C')
         pdf.cell(30, 8, '%s' % (str(df2['VO'].iloc[i])), 1, 0, 'C')
         pdf.cell(30, 8, '%s' % (str(df2['VO(%)'].iloc[i])), 1, 0, 'C')
-        
+        pdf.ln(8)
 
-    pdf.ln(10)
+    # Third table - Scan Settings
+    pdf.ln(2)
     pdf.set_font('arial', 'B', 12)
-    pdf.cell(75, 10, " ", 0, 2, 'C')
     pdf.cell(30, 8, 'Dwell Type', 1, 0, 'C')
     pdf.cell(30, 8, 'Dwell BER', 1, 0, 'C')
     pdf.cell(35, 8, 'Horizontal Inc.', 1, 0, 'C')
-    pdf.cell(35, 8, 'Vertical Inc.', 1, 0, 'C')
-    pdf.cell(60, 8, 'Misc Info', 1, 0, 'C')
+    pdf.cell(35, 8, 'Horizontal Range', 1, 0, 'C')
+    pdf.cell(30, 8, 'Vertical Inc.', 1, 0, 'C')
+    pdf.cell(30, 8, 'Vertical Range', 1, 0, 'C')
     pdf.ln(8)
     pdf.set_font('arial', '', 10)
     for i in range(0, len(df3)):
         pdf.cell(30, 8, '%s' % (str(df3['Dwell Type'].iloc[i])), 1, 0, 'C')
         pdf.cell(30, 8, '%s' % (str(df3['Dwell BER'].iloc[i])), 1, 0, 'C')
         pdf.cell(35, 8, '%s' % (str(df3['Horizontal Inc.'].iloc[i])), 1, 0, 'C')
-        pdf.cell(35, 8, '%s' % (str(df3['Vertical Inc.'].iloc[i])), 1, 0, 'C')
-        pdf.cell(60, 8, '%s' % (str(df3['Misc Info'].iloc[i])), 1, 0, 'C')
-        
+        pdf.cell(35, 8, '%s' % (str(df3['Horizontal Range'].iloc[i])), 1, 0, 'C')
+        pdf.cell(30, 8, '%s' % (str(df3['Vertical Inc.'].iloc[i])), 1, 0, 'C')
+        pdf.cell(30, 8, '%s' % (str(df3['Vertical Range'].iloc[i])), 1, 0, 'C')
+        pdf.ln(8)
 
-    #pdf.cell(90, 10, " ", 0, 2, 'C')
-    #pdf.cell(-30)
-
-    #pdf.cell(60)
-    #pdf.cell(75, 10, " " , 0, 2, 'C')
-    #pdf.cell(90, 10, " ", 0, 2, 'C')
-    #pdf.cell(-30)
+    # Add Misc Info in a separate row
+    pdf.cell(190, 8, 'Misc Info: %s' % (str(df3['Misc Info'].iloc[0])), 1, 0, 'L')
     pdf.ln(10)
-    pdf.image(filename_o.strip("pdf")+"png", x = None, y = None, w = 200, h = 200, type = '', link = '')
+
+    # Add the eye diagram plot
+    pdf.image(filename_o.strip("pdf")+"png", x=None, y=None, w=200, h=200, type='', link='')
     pdf.output(filename_o, 'F')
     plt.close()

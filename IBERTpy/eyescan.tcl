@@ -38,19 +38,19 @@ variable i
 variable ln
 set i 0
 foreach ln $links {
-    set descr "Scan $i"
-    set xil_newScan [create_hw_sio_scan -description $descr 2d_full_eye  [lindex [get_hw_sio_links $ln] 0 ]]
-    set_property HORIZONTAL_INCREMENT {2} [get_hw_sio_scans $xil_newScan]
-    set_property VERTICAL_INCREMENT {2} [get_hw_sio_scans $xil_newScan]
-    set_property DWELL_BER 1e-7 [get_hw_sio_scans $xil_newScan]
-    run_hw_sio_scan [get_hw_sio_scans $xil_newScan]
-    wait_on_hw_sio_scan [get_hw_sio_scans $xil_newScan]
-    set fname "scan_$i.csv"
-    write_hw_sio_scan -force $fname [get_hw_sio_scans $xil_newScan]
-    exec /usr/bin/python3 generate_plot.py $fname
+    # Extract Quad and MGT info from link name
+    if {[regexp {Quad_(\d+)/MGT_X\d+Y(\d+)} $ln match quad mgt]} {
+        set descr "Quad_${quad}_MGT_X0Y${mgt}"
+        set fname "${descr}.csv"
+        
+        set xil_newScan [create_hw_sio_scan -description $descr 2d_full_eye [lindex [get_hw_sio_links $ln] 0]]
+        set_property HORIZONTAL_INCREMENT {2} [get_hw_sio_scans $xil_newScan]
+        set_property VERTICAL_INCREMENT {2} [get_hw_sio_scans $xil_newScan]
+        set_property DWELL_BER 1e-7 [get_hw_sio_scans $xil_newScan]
+        run_hw_sio_scan [get_hw_sio_scans $xil_newScan]
+        wait_on_hw_sio_scan [get_hw_sio_scans $xil_newScan]
+        write_hw_sio_scan -force $fname [get_hw_sio_scans $xil_newScan]
+        exec /usr/bin/python3 generate_plot.py $fname
+    }
     incr i 1
 }
-# set xil_newScan [create_hw_sio_scan -description {Scan 0} 2d_full_eye  [lindex [get_hw_sio_links get_hw_targets/0_1_0_0/IBERT/Quad_225/MGT_X0Y8/TX->get_hw_targets/0_1_0_0/IBERT/Quad_225/MGT_X0Y8/RX] 0 ]]
-# set_property HORIZONTAL_INCREMENT {2} [get_hw_sio_scans $xil_newScan]
-# set_property VERTICAL_INCREMENT {2} [get_hw_sio_scans $xil_newScan]
-# set_property DWELL_BER 1e-7 [get_hw_sio_scans $xil_newScan] 
