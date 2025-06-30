@@ -122,7 +122,11 @@ def eyescan_plot(filename_i, filename_o, minlog10ber, colorbar=True, xaxis=True,
             df3['Dwell BER'] = [scan_list[13][1]]
             df3['Horizontal Inc.'] = [scan_list[15][1]]
             df3['Vertical Inc.'] = [scan_list[17][1]]
-            df3['Misc Info'] = [scan_list[19][1]]
+            try:
+                df3['Misc Info'] = [scan_list[19][1]]
+            except IndexError:
+                df3['Misc Info'] = ['']
+    # getting xticks and yticks
 
                 
     # getting eye data
