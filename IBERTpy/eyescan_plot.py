@@ -5,6 +5,8 @@ Created on Fri Jul 21 12:29:54 2017
 @author: msilvaol
 """
 
+import matplotlib
+matplotlib.use('Agg')  # Add this before other matplotlib imports
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 import numpy as np
