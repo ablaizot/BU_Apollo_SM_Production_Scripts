@@ -23,8 +23,9 @@ commit_hw_sio                              [get_hw_sio_links *];
 set_property LOGIC.MGT_ERRCNT_RESET_CTRL 0 [get_hw_sio_links *];
 commit_hw_sio                              [get_hw_sio_links *];
 
+
 # Wait for BER to go below 1E-12
-puts [date] ; exec sleep 360 ; puts [date]
+puts [exec date] ; exec sleep 200 ; puts [exec date]
 
 set scans [get_hw_sio_scans]
 foreach sc $scans {
