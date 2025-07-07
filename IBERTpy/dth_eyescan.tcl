@@ -1,6 +1,13 @@
+
+
 current_hw_target [get_hw_targets */xilinx_tcf/Xilinx/00001ee7fd5e01]
 set_property PARAM.FREQUENCY 6000000 [get_hw_targets */xilinx_tcf/Xilinx/00001ee7fd5e01]
 open_hw_target
+
+set_property PROBES.FILE {} [get_hw_devices xcku15p_0]
+set_property FULL_PROBES.FILE {} [get_hw_devices xcku15p_0]
+set_property PROGRAM.FILE {/home/ablaizot/dth_ibert.bit} [get_hw_devices xcku15p_0]
+program_hw_devices [get_hw_devices xcku15p_0]
 
 current_hw_device [get_hw_devices xcku15p_0]
 refresh_hw_device -update_hw_probes false [lindex [get_hw_devices xcku15p_0] 0]
