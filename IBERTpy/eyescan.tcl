@@ -25,7 +25,7 @@ commit_hw_sio                              [get_hw_sio_links *];
 
 
 # Wait for BER to go below 1E-12
-puts [exec date] ; exec sleep 200 ; puts [exec date]
+puts [exec date] ; exec sleep 210 ; puts [exec date]
 
 set scans [get_hw_sio_scans]
 foreach sc $scans {
