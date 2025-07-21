@@ -49,7 +49,7 @@ if {[info exists sleep_time] == 0} {
     set sleep_time 210
 }
 
-puts [exec date] ; exec sleep sleep_time ; puts [exec date]
+puts [exec date] ; exec sleep $sleep_time ; puts [exec date]
 
 set scans [get_hw_sio_scans]
 foreach sc $scans {
