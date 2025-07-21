@@ -13,8 +13,8 @@ if {[catch {set fp [open "ip.dat" r]} err]} {
 open_hw_target -xvc_url $ip:2542
 set hw_target [get_hw_targets]
 
-close_hw_target hw_target
-open_hw_target -xvc_url $ip:2542
+#close_hw_target hw_target
+#open_hw_target -xvc_url $ip:2542
 current_hw_device [get_hw_devices debug_bridge_0]
 refresh_hw_device -update_hw_probes false [lindex [get_hw_devices debug_bridge_0] 0]
 
