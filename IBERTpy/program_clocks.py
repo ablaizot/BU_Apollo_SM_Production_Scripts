@@ -44,8 +44,11 @@ def program_clocks(hostname, username='root', password=None):
             print("Changing directory and copying boot files...")
             conn.run('cd /fw/SM/boot_loopback && cp BOOT.BIN boot.scr image.ub ../')
             
-            print("Rebooting system...")
-            conn.run('reboot')
+            try:
+                print("Rebooting system...")
+                conn.run('reboot')
+            except Exception as e:  
+                print(f"Error during reboot: {str(e)}")
 
         print("Waiting for device to come back online...")
         if wait_for_device(hostname):
