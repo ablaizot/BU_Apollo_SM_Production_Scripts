@@ -3,6 +3,8 @@ import time
 import socket
 import subprocess
 from getpass import getpass  # Add this import at the top
+import os
+from threading import Thread
 
 CLOCK_DIR = '/root/soft/clocks/'
 
@@ -110,7 +112,39 @@ def program_clocks(hostname, username='root', password=None):
     except Exception as e:
         print(f"Error executing commands: {str(e)}")
 
+def run_vivado():
+    """Run Vivado in batch mode with eyescan.tcl after sourcing settings"""
+    try:
+        # Wait for ip.dat to exist and contain an IP
+        while not os.path.exists('ip.dat'):
+            time.sleep(1)
+            
+        # Read the IP address
+        with open('ip.dat', 'r') as f:
+            ip = f.read().strip()
+            
+        # Wait a bit for xvcserver to start
+        time.sleep(5)
+        
+        # Create command to source settings and run Vivado
+        cmd = [
+            'bash', 
+            '-c', 
+            'source /tools/Xilinx/Vivado/2023.2/settings64.sh && vivado -mode batch -source eyescan.tcl'
+        ]
+        
+        print("Starting Vivado with eyescan.tcl...")
+        subprocess.run(cmd, check=True)
+        
+    except Exception as e:
+        print(f"Error running Vivado: {str(e)}")
+
 if __name__ == "__main__":
+    # Start Vivado process in separate thread
+    vivado_thread = Thread(target=run_vivado)
+    vivado_thread.daemon = True
+    vivado_thread.start()
+    
     # Get hostname from user input
     hostname = input("Enter hostname or IP address: ")
     password = getpass("Enter password (leave empty for key-based auth): ")

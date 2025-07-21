@@ -1,8 +1,5 @@
+open_hw_manager
 connect_hw_server -url localhost:3121 -allow_non_jtag
-
-unset -nocomplain ::env(PYTHONHOME)
-unset -nocomplain ::env(PYTHONPATH)
-exec /usr/bin/python3 program_clocks.py 
 # Read IP
 if {[catch {set fp [open "ip.dat" r]} err]} {
     puts "Error: Could not open ip.dat: $err"
