@@ -72,7 +72,7 @@ def program_clocks(hostname, username='root', password=None, ):
                 print("Changing directory and copying boot files...")
                 conn.run('cd /fw/SM/boot_loopback && cp BOOT.BIN boot.scr image.ub ../')
                 
-                conn.run('exit')
+                conn.close()
     except Exception as e:
         print(f"Error executing commands: {str(e)}")
     
@@ -86,6 +86,7 @@ def start_xvcserver(hostname, username='root', password=None):
             try:
                 print("Rebooting system...")
                 conn.run('reboot')
+                conn.close()
             except Exception as e:  
                 print(f"Error during reboot: {str(e)}")
 
