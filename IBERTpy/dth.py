@@ -24,13 +24,51 @@ def run_dth_flashy(hostname, username='root', password=None):
             connect_kwargs={"password": password}
         ) as conn:
             print("Running DTH_Flashy.py --fpga tcds...")
-            result = conn.run('DTH_Flashy.py --fpga tcds', hide=False)
+            result = conn.run('DTH_Flashy.py --fpga tcds --batch --command loadFPGA --debug --start_adr s300', pty=True)
             print(f"Command output:\n{result.stdout}")
-            
+            print()
     except Exception as e:
         print(f"Error running DTH_Flashy.py: {str(e)}")
 
+
+def run_vivado(hostname='local', sleep_time=0):
+    """Run Vivado in batch mode with eyescan.tcl after sourcing settings"""
+    try:
+
+        # Create command to source settings and run Vivado
+        cmd = [
+            'bash', 
+            '-c', 
+            ' source /home/tools/Xilinx/Vivado_Lab/2024.1/settings64.sh &&  vivado_lab -mode gui -source dth_eyescan.tcl'
+        ]
+        
+        print("Starting Vivado...")
+        subprocess.run(cmd, check=True)
+
+
+    except Exception as e:
+        print(f"Error running Vivado: {str(e)}")
+
+def wait_for_pdf(timeout=300, interval=5):
+    """Wait for PDF file to appear in current directory"""
+    start_time = time.time()
+    while time.time() - start_time < timeout:
+        pdf_files = glob.glob("*.pdf")
+        if pdf_files:
+            print(f"Found PDF file: {pdf_files[0]}")
+            return True
+        time.sleep(interval)
+    return False
+
 if __name__ == "__main__":
+    # Run Vivado first
+    run_vivado()
     
-    # Run DTH_Flashy
-    run_dth_flashy('dth',username='DTH', password='userdth')
+    # Wait for PDF generation
+    if wait_for_pdf():
+        # Prompt user to continue
+        input("PDF file generated. Press Enter to continue with DTH_Flashy...")
+        # Run DTH_Flashy
+        run_dth_flashy('dth', username='DTH', password='userdth')
+    else:
+        print("Timeout waiting for PDF file generation")
