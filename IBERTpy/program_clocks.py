@@ -4,6 +4,8 @@ import socket
 import subprocess
 from getpass import getpass  # Add this import at the top
 
+CLOCK_DIR = '/root/soft/clocks/'
+
 def wait_for_device(hostname, timeout=300, interval=5):
     """Wait for device to respond to ping"""
     start_time = time.time()
@@ -37,7 +39,7 @@ def program_clocks(hostname, username='root', password=None):
         ) as conn:
             # Execute initial commands
             print("Programming clocks...")
-            conn.run('/root/soft/clocks/clock_sync_320M_LHC CONFIGS/CONFIG.toml')
+            conn.run(f'{CLOCK_DIR}clock_sync_320M_LHC {CLOCK_DIR}CONFIGS/CONFIG.toml')
             
             print("Changing directory and copying boot files...")
             conn.run('cd /fw/SM/boot_loopback && cp BOOT.BIN boot.scr image.ub ../')
