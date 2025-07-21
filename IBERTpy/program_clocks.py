@@ -115,11 +115,9 @@ def start_xvcserver(hostname, username='root', password=None):
                     f.close()
 
                 print("Starting xvcserver...")
-                conn.run('touch xvcserver.sh')
-                conn.run('chmod +x xvcserver.sh')
-                conn.run('echo "#!/bin/bash" > xvcserver.sh')
-                conn.run('echo "/root/soft/xvcserver" >> xvcserver.sh')
-                conn.run('./xvcserver.sh; exit')
+                conn.run('soft/xvcserver &')
+                conn.close()
+                print("xvcserver started successfully")
                 
                 
             print("All commands executed successfully")
@@ -140,7 +138,7 @@ def write_pygen_tcl(hostname, sleep_time):
     except Exception as e:
         print(f"Error creating pygen.tcl: {str(e)}")
 
-def run_vivado(hostname='local', sleep_time=210):
+def run_vivado(hostname='local', sleep_time=0):
     """Run Vivado in batch mode with eyescan.tcl after sourcing settings"""
     try:
         # Wait for ip.dat to exist and contain an IP

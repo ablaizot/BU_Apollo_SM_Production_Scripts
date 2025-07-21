@@ -1,4 +1,4 @@
-
+open_hw_manager
 
 current_hw_target [get_hw_targets */xilinx_tcf/Xilinx/00001ee7fd5e01]
 set_property PARAM.FREQUENCY 6000000 [get_hw_targets */xilinx_tcf/Xilinx/00001ee7fd5e01]
