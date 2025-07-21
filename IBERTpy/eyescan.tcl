@@ -68,6 +68,7 @@ foreach ln $links {
         set_property HORIZONTAL_INCREMENT {2} [get_hw_sio_scans $xil_newScan]
         set_property VERTICAL_INCREMENT {2} [get_hw_sio_scans $xil_newScan]
         set_property DWELL_BER 1e-7 [get_hw_sio_scans $xil_newScan]
+        set_property RESET_RX_AFTER_APPLYING_SETTINGS 1 [get_hw_sio_scans $xil_newScan]
         run_hw_sio_scan [get_hw_sio_scans $xil_newScan]
         wait_on_hw_sio_scan [get_hw_sio_scans $xil_newScan]
         write_hw_sio_scan -force $fname [get_hw_sio_scans $xil_newScan]
