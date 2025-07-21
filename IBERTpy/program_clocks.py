@@ -37,18 +37,40 @@ def program_clocks(hostname, username='root', password=None):
             user=username,
             connect_kwargs={"password": password}
         ) as conn:
-            # Execute initial commands
-            print("Programming clocks...")
-            conn.run(f'{CLOCK_DIR}clock_sync_320M_LHC {CLOCK_DIR}CONFIGS/CONFIG.toml')
             
             print("Changing directory and copying boot files...")
-            conn.run('cd /fw/SM/boot_loopback && cp BOOT.BIN boot.scr image.ub ../')
+            conn.run('cd /fw/SM/boot_regular_2025-04-28/ && cp BOOT.BIN boot.scr image.ub ../')
             
             try:
                 print("Rebooting system...")
                 conn.run('reboot')
             except Exception as e:  
                 print(f"Error during reboot: {str(e)}")
+
+        print("Waiting for device to come back online...")
+        if wait_for_device(hostname):
+            print(f"Device {hostname} is back online")
+            
+            # Create new connection after reboot
+            time.sleep(10)  # Additional wait to ensure services are up
+            with Connection(
+                host=hostname,
+                user=username,
+                connect_kwargs={"password": password}
+            ) as conn:
+
+                # Execute initial commands
+                print("Programming clocks...")
+                conn.run(f'{CLOCK_DIR}clock_sync_320M_LHC {CLOCK_DIR}CONFIGS/CONFIG.toml')
+                
+                print("Changing directory and copying boot files...")
+                conn.run('cd /fw/SM/boot_loopback && cp BOOT.BIN boot.scr image.ub ../')
+                
+                try:
+                    print("Rebooting system...")
+                    conn.run('reboot')
+                except Exception as e:  
+                    print(f"Error during reboot: {str(e)}")
 
         print("Waiting for device to come back online...")
         if wait_for_device(hostname):
