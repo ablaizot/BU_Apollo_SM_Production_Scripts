@@ -49,6 +49,7 @@ def program_clocks(hostname, username='root', password=None):
                 print(f"Error during reboot: {str(e)}")
 
         print("Waiting for device to come back online...")
+        time.sleep(10) #wait for reboot
         if wait_for_device(hostname):
             print(f"Device {hostname} is back online")
             
@@ -72,7 +73,7 @@ def program_clocks(hostname, username='root', password=None):
                     conn.run('reboot')
                 except Exception as e:  
                     print(f"Error during reboot: {str(e)}")
-
+        time.sleep(10)
         print("Waiting for device to come back online...")
         if wait_for_device(hostname):
             print(f"Device {hostname} is back online")
