@@ -33,4 +33,4 @@ def run_dth_flashy(hostname, username='root', password=None):
 if __name__ == "__main__":
     
     # Run DTH_Flashy
-    run_dth_flashy('dth',username='DTH' password='userdth')
+    run_dth_flashy('dth',username='DTH', password='userdth')
