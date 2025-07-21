@@ -128,7 +128,7 @@ def run_vivado():
         cmd = [
             'bash', 
             '-c', 
-            'source /tools/Xilinx/Vivado/2023.2/settings64.sh && vivado -mode batch -source eyescan.tcl'
+            'source /tools/Xilinx/Vivado/2023.2/settings64.sh && vivado -mode gui -source eyescan.tcl'
         ]
         
         print("Starting Vivado with eyescan.tcl...")
