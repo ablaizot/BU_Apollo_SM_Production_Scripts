@@ -2,6 +2,7 @@ from fabric import Connection
 import time
 import socket
 import subprocess
+from getpass import getpass  # Add this import at the top
 
 def wait_for_device(hostname, timeout=300, interval=5):
     """Wait for device to respond to ping"""
@@ -36,7 +37,7 @@ def program_clocks(hostname, username='root', password=None):
         ) as conn:
             # Execute initial commands
             print("Programming clocks...")
-            conn.run('/root/soft/clock_sync_320M_LHC CONFIGS/CONFIG.toml')
+            conn.run('/root/soft/clocks/clock_sync_320M_LHC CONFIGS/CONFIG.toml')
             
             print("Changing directory and copying boot files...")
             conn.run('cd /fw/SM/boot_loopback && cp BOOT.BIN boot.scr image.ub ../')
@@ -76,7 +77,7 @@ def program_clocks(hostname, username='root', password=None):
 if __name__ == "__main__":
     # Get hostname from user input
     hostname = input("Enter hostname or IP address: ")
-    password = input("Enter password (leave empty for key-based auth): ")
+    password = getpass("Enter password (leave empty for key-based auth): ")
     
     # Call function with user-provided hostname
     program_clocks(hostname, password=password if password else None)
