@@ -49,6 +49,7 @@ def program_clocks(hostname, username='root', password=None, ):
             try:
                 print("Rebooting system...")
                 conn.run('reboot')
+                conn.close()
             except Exception as e:  
                 print(f"Error during reboot: {str(e)}")
 
