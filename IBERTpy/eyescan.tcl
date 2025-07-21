@@ -43,9 +43,13 @@ commit_hw_sio                              [get_hw_sio_links *];
 set_property LOGIC.MGT_ERRCNT_RESET_CTRL 0 [get_hw_sio_links *];
 commit_hw_sio                              [get_hw_sio_links *];
 
+# Wait for BER to go below 1E-
+# if there is not sleep_time variable, set it to 10 seconds
+if {[info exists sleep_time] == 0} {
+    set sleep_time 210
+}
 
-# Wait for BER to go below 1E-12
-puts [exec date] ; exec sleep 210 ; puts [exec date]
+puts [exec date] ; exec sleep sleep_time ; puts [exec date]
 
 set scans [get_hw_sio_scans]
 foreach sc $scans {
