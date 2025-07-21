@@ -11,8 +11,10 @@ def wait_for_device(hostname, timeout=300, interval=5):
     start_time = time.time()
     while time.time() - start_time < timeout:
         try:
-            result = subprocess.run(['ping', hostname], 
+            # On Windows, ping command is different
+            result = subprocess.run(['ping','-c' ,'1', hostname], 
                                  capture_output=True, text=True)
+            print(f"Pinging {hostname}... Result: {result.stdout.strip() if result.stdout else result.stderr.strip()}")
             if result.returncode == 0:
                 return True
         except:
