@@ -87,14 +87,21 @@ def program_clocks(hostname, username='root', password=None):
             ) as conn:
                 print("Stopping services...")
                 conn.run('systemctl stop xvc_cm1.service xvc_cm2.service xvc_CPLD.service')
-                
-                print("Starting xvcserver...")
-                conn.run('soft/xvcserver &')
-                
+
                 print("Getting IP address...")
                 result = conn.run('hostname -I | awk \'{print $1}\'')
                 ip_address = result.stdout.strip()
                 print(f"Device IP address: {ip_address}")
+                ## Write to ip.dat file
+                with open('ip.dat', 'w') as f:
+                    f.write(ip_address + '\n')
+                    f.close()
+                
+
+
+                print("Starting xvcserver...")
+                conn.run('soft/xvcserver &')
+                
                 
             print("All commands executed successfully")
         else:

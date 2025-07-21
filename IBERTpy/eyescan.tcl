@@ -1,3 +1,25 @@
+connect_hw_server -url localhost:3121 -allow_non_jtag
+
+unset -nocomplain ::env(PYTHONHOME)
+unset -nocomplain ::env(PYTHONPATH)
+exec /usr/bin/python3 program_clock.py 
+# Read IP
+if {[catch {set fp [open "ip.dat" r]} err]} {
+    puts "Error: Could not open ip.dat: $err"
+    puts "Using default IP "
+    set ip 0
+} else {
+    gets $fp ip
+    close $fp
+    puts "Using IP $ip"
+}
+open_hw_target -xvc_url $ip:2542
+
+close_hw_target {localhost:3121/xilinx_tcf/Xilinx/$ip:2542}
+open_hw_target {localhost:3121/xilinx_tcf/Xilinx/$ip:2542}
+current_hw_device [get_hw_devices debug_bridge_0]
+refresh_hw_device -update_hw_probes false [lindex [get_hw_devices debug_bridge_0] 0]
+
 set xil_newLinks [list]
 set hw_target [get_hw_targets]
 
