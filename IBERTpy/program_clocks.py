@@ -51,7 +51,7 @@ def program_clocks(hostname, username='root', password=None):
                 print(f"Error during reboot: {str(e)}")
 
         print("Waiting for device to come back online...")
-        time.sleep(10) #wait for reboot
+        time.sleep(15) #wait for reboot
         if wait_for_device(hostname):
             print(f"Device {hostname} is back online")
             
@@ -75,7 +75,7 @@ def program_clocks(hostname, username='root', password=None):
                     conn.run('reboot')
                 except Exception as e:  
                     print(f"Error during reboot: {str(e)}")
-        time.sleep(10)
+        time.sleep(15)
         print("Waiting for device to come back online...")
         if wait_for_device(hostname):
             print(f"Device {hostname} is back online")
@@ -139,6 +139,8 @@ def run_vivado():
 
 if __name__ == "__main__":
     # Start Vivado process in separate thread
+
+
     vivado_thread = Thread(target=run_vivado)
     vivado_thread.daemon = True
     vivado_thread.start()
