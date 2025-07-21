@@ -115,7 +115,11 @@ def start_xvcserver(hostname, username='root', password=None):
                     f.close()
 
                 print("Starting xvcserver...")
-                conn.run('soft/xvcserver &; exit')
+                conn.run('touch xvcserver.sh')
+                conn.run('chmod +x xvcserver.sh')
+                conn.run('echo "#!/bin/bash" > xvcserver.sh')
+                conn.run('echo "/root/soft/xvcserver" >> xvcserver.sh')
+                conn.run('./xvcserver.sh; exit')
                 
                 
             print("All commands executed successfully")
