@@ -98,8 +98,6 @@ def program_clocks(hostname, username='root', password=None):
                 with open('ip.dat', 'w') as f:
                     f.write(ip_address + '\n')
                     f.close()
-                
-
 
                 print("Starting xvcserver...")
                 conn.run('soft/xvcserver &')
