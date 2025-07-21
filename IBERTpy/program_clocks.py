@@ -24,7 +24,7 @@ def wait_for_device(hostname, timeout=300, interval=5):
         time.sleep(interval)
     return False
 
-def program_clocks(hostname, username='root', password=None):
+def program_clocks(hostname, username='root', reboot_only=False, password=None, ):
     """
     Execute clock programming and reboot commands over SSH using Fabric
     
@@ -35,47 +35,62 @@ def program_clocks(hostname, username='root', password=None):
     """
     try:
         # Create SSH connection
-        with Connection(
-            host=hostname,
-            user=username,
-            connect_kwargs={"password": password}
-        ) as conn:
-            
-            print("Changing directory and copying boot files...")
-            conn.run('cd /fw/SM/boot_regular_2025-04-28/ && cp BOOT.BIN boot.scr image.ub ../')
-            
-            try:
-                print("Rebooting system...")
-                conn.run('reboot')
-            except Exception as e:  
-                print(f"Error during reboot: {str(e)}")
-
-        print("Waiting for device to come back online...")
-        time.sleep(15) #wait for reboot
-        if wait_for_device(hostname):
-            print(f"Device {hostname} is back online")
-            
-            # Create new connection after reboot
-            time.sleep(10)  # Additional wait to ensure services are up
+        if(not reboot_only):
             with Connection(
                 host=hostname,
                 user=username,
                 connect_kwargs={"password": password}
             ) as conn:
-
-                # Execute initial commands
-                print("Programming clocks...")
-                conn.run(f'{CLOCK_DIR}clock_sync_320M_LHC {CLOCK_DIR}CONFIGS/CONFIG.toml')
                 
                 print("Changing directory and copying boot files...")
-                conn.run('cd /fw/SM/boot_loopback && cp BOOT.BIN boot.scr image.ub ../')
+                conn.run('cd /fw/SM/boot_regular_2025-04-28/ && cp BOOT.BIN boot.scr image.ub ../')
                 
                 try:
                     print("Rebooting system...")
                     conn.run('reboot')
                 except Exception as e:  
                     print(f"Error during reboot: {str(e)}")
+
+            print("Waiting for device to come back online...")
+            time.sleep(15) #wait for reboot
+            if wait_for_device(hostname):
+                print(f"Device {hostname} is back online")
+                
+                # Create new connection after reboot
+                time.sleep(10)  # Additional wait to ensure services are up
+                with Connection(
+                    host=hostname,
+                    user=username,
+                    connect_kwargs={"password": password}
+                ) as conn:
+
+                    # Execute initial commands
+                    print("Programming clocks...")
+                    conn.run(f'{CLOCK_DIR}clock_sync_320M_LHC {CLOCK_DIR}CONFIGS/CONFIG.toml')
+                    
+                    print("Changing directory and copying boot files...")
+                    conn.run('cd /fw/SM/boot_loopback && cp BOOT.BIN boot.scr image.ub ../')
+                    
+                    try:
+                        print("Rebooting system...")
+                        conn.run('reboot')
+                    except Exception as e:  
+                        print(f"Error during reboot: {str(e)}")
+        
+        else:
+            with Connection(
+                    host=hostname,
+                    user=username,
+                    connect_kwargs={"password": password}
+                ) as conn:
+                try:
+                    print("Rebooting system...")
+                    conn.run('reboot')
+                except Exception as e:  
+                    print(f"Error during reboot: {str(e)}")
+
         time.sleep(15)
+
         print("Waiting for device to come back online...")
         if wait_for_device(hostname):
             print(f"Device {hostname} is back online")
@@ -139,7 +154,9 @@ def run_vivado():
 
 if __name__ == "__main__":
     # Start Vivado process in separate thread
-
+    # delete ip.dat file
+    if os.path.exists('ip.dat'):
+        os.remove('ip.dat')
 
     vivado_thread = Thread(target=run_vivado)
     vivado_thread.daemon = True
@@ -148,6 +165,8 @@ if __name__ == "__main__":
     # Get hostname from user input
     hostname = input("Enter hostname or IP address: ")
     password = getpass("Enter password (leave empty for key-based auth): ")
+    reboot = input ("Reboot only? (yes/no): ").strip().lower()
+    reboot = reboot == 'yes'  # Convert to boolean
     
     # Call function with user-provided hostname
-    program_clocks(hostname, password=password if password else None)
+    program_clocks(hostname,reboot_only=reboot, password=password if password else None, )
