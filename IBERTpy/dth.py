@@ -7,6 +7,7 @@ from threading import Thread
 import glob
 import csv
 from getpass import getpass
+import psutil
 
 def run_dth_flashy(hostname, username='root', password=None):
     """
@@ -24,7 +25,7 @@ def run_dth_flashy(hostname, username='root', password=None):
             connect_kwargs={"password": password}
         ) as conn:
             print("Running DTH_Flashy.py --fpga tcds...")
-            result = conn.shell('DTH_Flashy.py --fpga tcds --batch --command loadFPGA --start_adr s300')
+            result = conn.shell('ablaizot/dth.sh')
             print(f"Command output:\n{result.stdout}")
             print()
     except Exception as e:
@@ -72,6 +73,15 @@ def main():
         # Prompt user to continue
         input("PDF file generated. Press Enter to continue with DTH_Flashy...")
         # Run DTH_Flashy
+        for proc in psutil.process_iter(['name']):
+            try:
+                # Check for both vivado and vivado_lab processes
+                if proc.info['name'] == 'vivado_lab':
+                    print(f"Terminating Vivado process: {proc.pid}")
+                    proc.terminate()
+                    proc.wait(timeout=5)  # Wait for process to terminate
+            except (psutil.NoSuchProcess, psutil.TimeoutExpired):
+                pass
         run_dth_flashy('dth', username='DTH', password='userdth')
     else:
         print("Timeout waiting for PDF file generation")
