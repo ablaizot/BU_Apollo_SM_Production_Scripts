@@ -49,7 +49,7 @@ def run_vivado(hostname='local', sleep_time=0):
     except Exception as e:
         print(f"Error running Vivado: {str(e)}")
 
-def wait_for_pdf(timeout=300, interval=5):
+def wait_for_pdf(timeout=500, interval=5):
     """Wait for PDF file to appear in current directory"""
     start_time = time.time()
     while time.time() - start_time < timeout:
@@ -60,9 +60,12 @@ def wait_for_pdf(timeout=300, interval=5):
         time.sleep(interval)
     return False
 
-if __name__ == "__main__":
-    # Run Vivado first
-    run_vivado()
+def main():
+    """Main function to run Vivado and DTH_Flashy in sequence"""
+    # Create and start Vivado thread
+    vivado_thread = Thread(target=run_vivado)
+    vivado_thread.daemon = True
+    vivado_thread.start()
     
     # Wait for PDF generation
     if wait_for_pdf():
@@ -72,3 +75,9 @@ if __name__ == "__main__":
         run_dth_flashy('dth', username='DTH', password='userdth')
     else:
         print("Timeout waiting for PDF file generation")
+
+    # Wait for Vivado thread to complete
+    vivado_thread.join()
+
+if __name__ == "__main__":
+    main()
