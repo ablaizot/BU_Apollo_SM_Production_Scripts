@@ -25,7 +25,7 @@ def run_dth_flashy(hostname, username='root', password=None):
             connect_kwargs={"password": password}
         ) as conn:
             print("Running DTH_Flashy.py --fpga tcds...")
-            result = conn.shell('ablaizot/dth.sh')
+            result = conn.run('ablaizot/dth.sh')
             print(f"Command output:\n{result.stdout}")
             print()
     except Exception as e:
