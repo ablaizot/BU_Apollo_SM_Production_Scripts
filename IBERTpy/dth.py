@@ -9,6 +9,7 @@ import csv
 from getpass import getpass
 import psutil
 from program_clocks import CLOCK_DIR
+import time
 
 def run_dth_flashy(hostname, username='root', password=None):
     """
@@ -28,9 +29,16 @@ def run_dth_flashy(hostname, username='root', password=None):
             print("Running DTH_Flashy.py --fpga tcds...")
             result = conn.run('ablaizot/dth.sh')
             print(f"Command output:\n{result.stdout}")
-            print()
+            conn.run('tcds2_dth_driver id')
+            conn.close()
     except Exception as e:
         print(f"Error running DTH_Flashy.py: {str(e)}")
+        conn.run("tcds2_dth_driver reload")
+        time.sleep(180)
+        conn.run("tcds2_dth_driver init")
+        conn.run('tcds2_dth_driver id')
+
+        conn.close()
 
 
 def run_vivado(hostname='local', sleep_time=0):
@@ -80,7 +88,6 @@ def blackplane_clocks(hostname, username='root', password=None, ):
 
             conn.close()
             print("Clocks should be scoped now.")
-
 
 
         except Exception as e:
