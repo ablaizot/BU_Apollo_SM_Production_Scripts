@@ -24,7 +24,7 @@ def run_dth_flashy(hostname, username='root', password=None):
             connect_kwargs={"password": password}
         ) as conn:
             print("Running DTH_Flashy.py --fpga tcds...")
-            result = conn.run('DTH_Flashy.py --fpga tcds --batch --command loadFPGA --debug --start_adr s300', pty=True)
+            result = conn.open_shell('DTH_Flashy.py --fpga tcds --batch --command loadFPGA --start_adr s300')
             print(f"Command output:\n{result.stdout}")
             print()
     except Exception as e:
