@@ -19,7 +19,6 @@ def get_mac_address(serial_num):
         with open('mac_addr.csv', 'r') as f:
             reader = csv.reader(f, delimiter='\t')
             for row in reader:
-                print(f"Processing row: {row}")  # Debugging output
                 if len(row) >= 4:
                     for key in look:
                         if key in row[4]:
