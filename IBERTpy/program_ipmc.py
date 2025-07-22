@@ -21,13 +21,14 @@ def get_mac_address(serial_num):
                     mac_cmd.append(row[9])
                 
                 
-                
-                
+        return mac_cmd
     except Exception as e:
         print(f"Error reading MAC address: {str(e)}")
     return None
 
 def send_command_to_ipmc(serial_number, port='/dev/ttyACM1', baudrate=115200):
+
+    mac_cmds = get_mac_address(serial_number)
 
     with serial.Serial(port, baudrate, timeout=1) as ser:
         ser.write(b'eepromrd\n')
@@ -37,7 +38,10 @@ def send_command_to_ipmc(serial_number, port='/dev/ttyACM1', baudrate=115200):
         ser.write(b'verwr 2\n')
         ser.write(b'revwr 3\n')
         ser.write(b'bootmode 3\n')
-        ser.write(b'bootmode 2\n')
+        ser.write(b'idwr {f"{serial_number}"}\n'.format(serial_number=serial_number))
+
+        for mac_addr in mac_cmds:
+            ser.write(mac_addr.encode('utf-8') + b'\n')
 
         s = ser.read(200)
         print(s.decode('utf-8'))
