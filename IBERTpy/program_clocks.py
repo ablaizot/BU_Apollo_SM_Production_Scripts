@@ -246,11 +246,11 @@ if __name__ == "__main__":
     # Get hostname from user input
     hostname = input("Enter hostname or IP address: ")
     password = getpass("Enter password (leave empty for key-based auth): ")
-    reboot = input ("Reboot only? (yes/no): ").strip().lower()
-    reboot = reboot == 'yes'  # Convert to boolean
+    change_fw = input ("Change to Loopback FW? (yes/no): ").strip().lower()
+    change_fw = change_fw == 'yes'  # Convert to boolean
     
     # Call function with user-provided hostname
-    if not reboot:
+    if not change_fw:
         program_clocks(hostname, password=password if password else None)
 
     # Start xvcserver

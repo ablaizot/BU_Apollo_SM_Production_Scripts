@@ -8,6 +8,7 @@ import glob
 import csv
 from getpass import getpass
 import psutil
+from program_clocks import CLOCK_DIR
 
 def run_dth_flashy(hostname, username='root', password=None):
     """
@@ -61,6 +62,30 @@ def wait_for_pdf(timeout=500, interval=5):
         time.sleep(interval)
     return False
 
+def blackplane_clocks(hostname, username='root', password=None, ):
+    with Connection(
+        host=hostname,
+        user=username,
+        connect_kwargs={"password": password}
+    ) as conn:
+        
+        try:
+
+            print("Programming clocks...")
+            conn.run(f'{CLOCK_DIR}clock_sync_320M_LHC {CLOCK_DIR}CONFIGS/CONFIG.toml')
+
+            print("Switch to backplane clocks in BUtool:")
+            conn.run('echo \'w SERV.CLOCKING.HQ_SEL 0\' | BUTool.exe -a')
+            conn.run('echo \'w SERV.CLOCKING.LHC_SEL 0\' | BUTool.exe -a')
+
+            conn.close()
+            print("Clocks should be scoped now.")
+
+
+
+        except Exception as e:
+            print(f"Error executing commands: {str(e)}")
+
 def main():
     """Main function to run Vivado and DTH_Flashy in sequence"""
     # Create and start Vivado thread
@@ -83,6 +108,11 @@ def main():
             except (psutil.NoSuchProcess, psutil.TimeoutExpired):
                 pass
         run_dth_flashy('dth', username='DTH', password='userdth')
+        hostname = input("Enter hostname or IP address: ")
+        password = getpass("Enter password (leave empty for key-based auth): ")
+        blackplane_clocks(hostname, username='root', password=password)
+
+
     else:
         print("Timeout waiting for PDF file generation")
 
