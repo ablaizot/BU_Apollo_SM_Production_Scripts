@@ -26,17 +26,16 @@ def run_dth_flashy(hostname, username='root', password=None):
             user=username,
             connect_kwargs={"password": password}
         ) as conn:
-            print("Running DTH_Flashy.py --fpga tcds...")
+            print("Running DTH_Flashy.py --fpga tcds, Wait 3 minutes and press enter to continue")
             result = conn.run('ablaizot/dth.sh')
-            print(f"Command output:\n{result.stdout}")
             conn.run('tcds2_dth_driver id')
             conn.close()
     except Exception as e:
         print(f"Error running DTH_Flashy.py: {str(e)}")
+        print("Reloading Driver")
         conn.run("tcds2_dth_driver reload")
-        time.sleep(180)
-        conn.run("tcds2_dth_driver init")
-        conn.run('tcds2_dth_driver id')
+        time.sleep(240)
+        conn.run("tcds2_dth_driver links init")
 
         conn.close()
 
