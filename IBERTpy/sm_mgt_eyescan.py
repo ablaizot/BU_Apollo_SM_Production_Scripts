@@ -142,7 +142,7 @@ def write_pygen_tcl(hostname, sleep_time):
     except Exception as e:
         print(f"Error creating pygen.tcl: {str(e)}")
 
-def run_vivado(sleep_time=0):
+def run_vivado(hostname='local', sleep_time=0):
     """Run Vivado in batch mode with eyescan.tcl after sourcing settings"""
     try:
         # Wait for ip.dat to exist and contain an IP
@@ -223,7 +223,7 @@ def monitor_scans(hostname, password=None):
                     start_xvcserver(hostname, password=password)
                     
                     # Create and start new Vivado thread
-                    vivado_thread = Thread(target=run_vivado(sleep_time=0))
+                    vivado_thread = Thread(target=run_vivado(hostname=hostname,sleep_time=0))
                     vivado_thread.daemon = True
                     vivado_thread.start()
                     
@@ -242,10 +242,6 @@ if __name__ == "__main__":
     if os.path.exists('ip.dat'):
         os.remove('ip.dat')
 
-    vivado_thread = Thread(target=run_vivado())
-    vivado_thread.daemon = True
-    vivado_thread.start()
-
     
     # Get hostname from user input
     hostname = input("Enter hostname or IP address: ")
@@ -259,6 +255,9 @@ if __name__ == "__main__":
         hostname = input("Enter hostname or IP address: ")
     
     
+    vivado_thread = Thread(target=run_vivado(hostname=hostname))
+    vivado_thread.daemon = True
+    vivado_thread.start()
 
     # Call function with user-provided hostname
     if change_fw:
