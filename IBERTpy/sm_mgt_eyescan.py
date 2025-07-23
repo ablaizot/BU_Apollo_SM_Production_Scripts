@@ -117,7 +117,7 @@ def start_xvcserver(hostname, username='root', password=None):
                 with open('ip.dat', 'w') as f:
                     f.write(ip_address + '\n')
                     f.close()
-
+                
                 print("Starting xvcserver...")
                 conn.run('soft/xvcserver &')
                 conn.close()
@@ -260,10 +260,12 @@ if __name__ == "__main__":
     if change_fw:
         program_clocks(hostname, password=password if password else None)
 
-    # Start xvcserver
-    start_xvcserver(hostname, password=password if password else None)
-    
-    # Start monitoring in separate thread
+        # Start monitoring in separate thread
     monitor_thread = Thread(target=monitor_scans, args=(hostname, password if password else None))
     monitor_thread.daemon = True
     monitor_thread.start()
+    
+    # Start xvcserver
+    start_xvcserver(hostname, password=password if password else None)
+    
+
