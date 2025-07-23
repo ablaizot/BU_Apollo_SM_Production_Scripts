@@ -269,8 +269,6 @@ if __name__ == "__main__":
     monitor_thread.daemon = True
     monitor_thread.start()
 
-
-
     
     # Make output directory use date and time
     output_dir = time.strftime(f"{hostname}_%Y%m%d_%H%M%S")
@@ -280,6 +278,3 @@ if __name__ == "__main__":
 
     # Start xvcserver
     start_xvcserver(hostname, password=password if password else None)
-        
-    vivado_thread.join()
-    monitor_thread.join()
