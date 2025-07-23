@@ -9,8 +9,6 @@ import glob
 import csv
 
 CLOCK_DIR = '/root/soft/clocks/'
-output_dir = time.strftime("%Y%m%d_%H%M%S")
-
 
 def wait_for_device(hostname, timeout=300, interval=5):
     """Wait for device to respond to ping"""
@@ -158,13 +156,12 @@ def run_vivado(hostname='local', sleep_time=0):
             
         # Wait a bit for xvcserver to start
         time.sleep(5)
-
         
         # Create command to source settings and run Vivado
         cmd = [
             'bash', 
             '-c', 
-            f'cd {output_dir}; source /tools/Xilinx/Vivado/2023.2/settings64.sh && vivado -mode gui -source ../pygen.tcl'
+            'source /tools/Xilinx/Vivado/2023.2/settings64.sh && vivado -mode gui -source pygen.tcl'
         ]
         
         print("Starting Vivado with pygen.tcl...")
@@ -178,12 +175,12 @@ def monitor_scans(hostname, password=None):
     try:
         while True:
             # Check for PDF count
-            pdf_files = glob.glob(f"{output_dir}*.pdf")
+            pdf_files = glob.glob("*.pdf")
             if len(pdf_files) >= 5:
                 print("Found 5 or more PDFs, checking CSV files...")
                 
                 # Check all CSV files
-                csv_files = glob.glob(f"{output_dir}*.csv")
+                csv_files = glob.glob("*.csv")
                 restart_needed = False
                 
                 for csv_file in csv_files:
@@ -223,7 +220,7 @@ def monitor_scans(hostname, password=None):
                     start_xvcserver(hostname, password=password)
                     
                     # Create and start new Vivado thread
-                    vivado_thread = Thread(target=run_vivado(hostname=hostname,sleep_time=0))
+                    vivado_thread = Thread(target=run_vivado(sleep_time=0))
                     vivado_thread.daemon = True
                     vivado_thread.start()
                     
@@ -242,6 +239,9 @@ if __name__ == "__main__":
     if os.path.exists('ip.dat'):
         os.remove('ip.dat')
 
+    vivado_thread = Thread(target=run_vivado)
+    vivado_thread.daemon = True
+    vivado_thread.start()
     
     # Get hostname from user input
     hostname = input("Enter hostname or IP address: ")
@@ -254,25 +254,14 @@ if __name__ == "__main__":
         print(f"Device {hostname} is not reachable. Try again:")
         hostname = input("Enter hostname or IP address: ")
     
-    
-    vivado_thread = Thread(target=run_vivado(hostname=hostname))
-    vivado_thread.daemon = True
-    vivado_thread.start()
-
     # Call function with user-provided hostname
     if change_fw:
         program_clocks(hostname, password=password if password else None)
 
+    # Start xvcserver
+    start_xvcserver(hostname, password=password if password else None)
+    
     # Start monitoring in separate thread
     monitor_thread = Thread(target=monitor_scans, args=(hostname, password if password else None))
     monitor_thread.daemon = True
     monitor_thread.start()
-
-    
-    # Make output directory use date and time
-    output_dir = time.strftime(f"{hostname}_%Y%m%d_%H%M%S")
-    if not os.path.exists(output_dir):
-        os.makedirs(output_dir)
-
-    # Start xvcserver
-    start_xvcserver(hostname, password=password if password else None)
