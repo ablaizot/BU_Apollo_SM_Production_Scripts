@@ -7,6 +7,8 @@ import os
 from threading import Thread
 import glob
 import csv
+output_dir = time.strftime("%Y%m%d_%H%M%S")
+
 
 CLOCK_DIR = '/root/soft/clocks/'
 
@@ -161,7 +163,7 @@ def run_vivado(hostname='local', sleep_time=0):
         cmd = [
             'bash', 
             '-c', 
-            'source /tools/Xilinx/Vivado/2023.2/settings64.sh && vivado -mode gui -source pygen.tcl'
+            f'cd {output_dir}; source /tools/Xilinx/Vivado/2023.2/settings64.sh && vivado -mode gui -source pygen.tcl'
         ]
         
         print("Starting Vivado with pygen.tcl...")
@@ -175,12 +177,12 @@ def monitor_scans(hostname, password=None):
     try:
         while True:
             # Check for PDF count
-            pdf_files = glob.glob("*.pdf")
+            pdf_files = glob.glob(f"{output_dir}*.pdf")
             if len(pdf_files) >= 5:
                 print("Found 5 or more PDFs, checking CSV files...")
                 
                 # Check all CSV files
-                csv_files = glob.glob("*.csv")
+                csv_files = glob.glob(f"{output_dir}*.csv")
                 restart_needed = False
                 
                 for csv_file in csv_files:
