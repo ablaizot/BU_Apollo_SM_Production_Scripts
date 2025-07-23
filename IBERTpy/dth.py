@@ -8,7 +8,7 @@ import glob
 import csv
 from getpass import getpass
 import psutil
-from program_clocks import CLOCK_DIR
+from IBERTpy.sm_mgt_eyescan import CLOCK_DIR
 import time
 
 def run_dth_flashy(hostname, username='root', password=None):

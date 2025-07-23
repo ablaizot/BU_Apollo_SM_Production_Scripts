@@ -248,9 +248,14 @@ if __name__ == "__main__":
     password = getpass("Enter password (leave empty for key-based auth): ")
     change_fw = input ("Change to Loopback FW? (yes/no): ").strip().lower()
     change_fw = change_fw == 'yes'  # Convert to boolean
+
+    # Check if hostname is reachable
+    while not wait_for_device(hostname, timeout=15):
+        print(f"Device {hostname} is not reachable. Try again:")
+        hostname = input("Enter hostname or IP address: ")
     
     # Call function with user-provided hostname
-    if not change_fw:
+    if change_fw:
         program_clocks(hostname, password=password if password else None)
 
     # Start xvcserver
