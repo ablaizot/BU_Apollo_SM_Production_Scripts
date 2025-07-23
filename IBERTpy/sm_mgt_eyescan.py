@@ -273,6 +273,7 @@ if __name__ == "__main__":
     output_dir = time.strftime(f"{hostname}_%Y%m%d_%H%M%S")
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
+        print(f"Created output directory: {output_dir}")
 
     # Start xvcserver
     start_xvcserver(hostname, password=password if password else None)
