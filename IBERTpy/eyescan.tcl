@@ -80,3 +80,12 @@ foreach ln $links {
     }
     incr i 1
 }
+
+# Low speed ILA
+set_property PROBES.FILE {../top.ltx} [get_hw_devices debug_bridge_0]
+set_property FULL_PROBES.FILE {../top.ltx} [get_hw_devices debug_bridge_0]
+refresh_hw_device [lindex [get_hw_devices debug_bridge_0] 0]
+display_hw_ila_data [ get_hw_ila_data hw_ila_data_1 -of_objects [get_hw_ilas -of_objects [get_hw_devices debug_bridge_0] -filter {CELL_NAME=~"loopback_ila_i"}]]
+run_hw_ila [get_hw_ilas -of_objects [get_hw_devices debug_bridge_0] -filter {CELL_NAME=~"loopback_ila_i"}]
+wait_on_hw_ila [get_hw_ilas -of_objects [get_hw_devices debug_bridge_0] -filter {CELL_NAME=~"loopback_ila_i"}]
+display_hw_ila_data [upload_hw_ila_data [get_hw_ilas -of_objects [get_hw_devices debug_bridge_0] -filter {CELL_NAME=~"loopback_ila_i"}]]
