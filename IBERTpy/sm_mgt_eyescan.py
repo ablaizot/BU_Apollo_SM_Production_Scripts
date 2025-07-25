@@ -8,6 +8,8 @@ from threading import Thread
 import glob
 import csv
 import paramiko
+import sys
+import psutil
 #output_dir = time.strftime("%Y%m%d_%H%M%S")
 
 ip_address = None
@@ -244,6 +246,9 @@ def monitor_scans(hostname, password=None):
                     
                     
                     print("Services restarted")
+                else:
+                    print("All eyes are valid. Manually check the scans.")
+                    sys.exit(0)
                     
                 break  # Exit monitoring loop after checking files
                 
