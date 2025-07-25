@@ -186,17 +186,16 @@ def monitor_scans(hostname, password=None):
     """Monitor directory for PDFs and check CSV files for Open Area"""
     global vivado_thread
     global output_dir
-    print(f"Checking for PDF files in {output_dir}...")
     try:
         while True:
             # Check for PDF count
             print(f"Checking for PDF files in {output_dir}...")
-            pdf_files = glob.glob(f"{output_dir}*.pdf")
+            pdf_files = glob.glob(f"{output_dir}/*.pdf")
             if len(pdf_files) >= 5:
                 print("Found 5 or more PDFs, checking CSV files...")
                 
                 # Check all CSV files
-                csv_files = glob.glob(f"{output_dir}*.csv")
+                csv_files = glob.glob(f"{output_dir}/*.csv")
                 restart_needed = False
                 
                 for csv_file in csv_files:
