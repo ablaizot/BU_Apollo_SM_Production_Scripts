@@ -189,7 +189,7 @@ def monitor_scans(hostname, password=None):
     try:
         while True:
             # Check for PDF count
-            print(f"Checking for PDF files in {output_dir}...")
+            #print(f"Checking for PDF files in {output_dir}...")
             pdf_files = glob.glob(f"{output_dir}/*.pdf")
             if len(pdf_files) >= 5:
                 print("Found 5 or more PDFs, checking CSV files...")
@@ -231,7 +231,7 @@ def monitor_scans(hostname, password=None):
                     if os.path.exists('ip.dat'):
                         os.remove('ip.dat')
                     
-                    os.remove(f"{output_dir}*.pdf")  # Remove all PDFs in output directory
+                    os.remove(f"{output_dir}/*.pdf")  # Remove all PDFs in output directory
 
                     # Start new xvcserver
                     start_xvcserver(hostname, password=password)
