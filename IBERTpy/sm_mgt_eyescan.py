@@ -7,6 +7,7 @@ import os
 from threading import Thread
 import glob
 import csv
+import paramiko
 output_dir = time.strftime("%Y%m%d_%H%M%S")
 
 
@@ -264,7 +265,7 @@ if __name__ == "__main__":
                 conn.run('echo "Connection successful"')
                 conn_est = True
                 print(f"Device {hostname} is reachable.")
-        except (socket.error, ConnectionError) as e:
+        except (socket.error, ConnectionError, paramiko.AuthenticationException) as e:
             print(f"Device {hostname} is not reachable. Try again:")
             hostname = input("Enter hostname or IP address: ")
             password = getpass("Enter password (leave empty for key-based auth): ")
