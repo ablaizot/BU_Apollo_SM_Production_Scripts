@@ -8,7 +8,7 @@ from threading import Thread
 import glob
 import csv
 import paramiko
-output_dir = time.strftime("%Y%m%d_%H%M%S")
+#output_dir = time.strftime("%Y%m%d_%H%M%S")
 
 
 CLOCK_DIR = '/root/soft/clocks/'
@@ -119,10 +119,7 @@ def start_xvcserver(hostname, username='root', password=None):
                     f.write(ip_address + '\n')
                     f.close()
                 
-                output_dir = time.strftime(f"{hostname}_%Y%m%d_%H%M%S")
-                if not os.path.exists(output_dir):
-                    os.makedirs(output_dir)
-                print(f"Output directory created: {output_dir}")
+
                 
                 print("Starting xvcserver...")
                 conn.run('soft/xvcserver &')
@@ -148,7 +145,7 @@ def write_pygen_tcl(hostname, sleep_time):
     except Exception as e:
         print(f"Error creating pygen.tcl: {str(e)}")
 
-def run_vivado(hostname='local', sleep_time=0):
+def run_vivado(hostname='local', sleep_time=0, output_dir='.'):
     """Run Vivado in batch mode with eyescan.tcl after sourcing settings"""
     try:
         # Wait for ip.dat to exist and contain an IP
@@ -249,9 +246,7 @@ if __name__ == "__main__":
     if os.path.exists('ip.dat'):
         os.remove('ip.dat')
 
-    vivado_thread = Thread(target=run_vivado)
-    vivado_thread.daemon = True
-    vivado_thread.start()
+
     
     # Get hostname from user input
     hostname = input("Enter hostname or IP address: ")
@@ -277,6 +272,14 @@ if __name__ == "__main__":
             hostname = input("Enter hostname or IP address: ")
             password = getpass("Enter password (leave empty for key-based auth): ")
 
+    output_dir = time.strftime(f"{hostname}_%Y%m%d_%H%M%S")
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+    print(f"Output directory created: {output_dir}")
+
+    vivado_thread = Thread(target=run_vivado(output_dir=output_dir, sleep_time=120))
+    vivado_thread.daemon = True
+    vivado_thread.start()
     
     # Call function with user-provided hostname
     if change_fw:
