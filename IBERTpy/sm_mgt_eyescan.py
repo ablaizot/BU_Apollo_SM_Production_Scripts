@@ -95,40 +95,42 @@ def start_xvcserver(hostname, username='root', password=None):
                 print("Rebooting system...")
                 conn.run('reboot', warn=True)
                 conn.close()
+                time.sleep(15)
+
             except Exception as e:  
                 print(f"Error during reboot: {str(e)}")
 
         time.sleep(15)
 
         print("Waiting for device to come back online...")
-        if wait_for_device(hostname):
-            print(f"Device {hostname} is back online")
+        wait_for_device(hostname)
+        print(f"Device {hostname} is back online")
+        
+        # Create new connection after reboot
+        time.sleep(10)  # Additional wait to ensure services are up
+        with Connection(
+            host=hostname,
+            user=username,
+            connect_kwargs={"password": password}
+        ) as conn:
+            print("Stopping services...")
+            conn.run('systemctl stop xvc_cm1.service xvc_cm2.service xvc_CPLD.service')
+
+            print("Getting IP address...")
+            result = conn.run('hostname -I | awk \'{print $1}\'')
+            ip_address = result.stdout.strip()
+            print(f"Device IP address: {ip_address}")
+            ## Write to ip.dat file
+            with open('ip.dat', 'w') as f:
+                f.write(ip_address + '\n')
+                f.close()
             
-            # Create new connection after reboot
-            time.sleep(10)  # Additional wait to ensure services are up
-            with Connection(
-                host=hostname,
-                user=username,
-                connect_kwargs={"password": password}
-            ) as conn:
-                print("Stopping services...")
-                conn.run('systemctl stop xvc_cm1.service xvc_cm2.service xvc_CPLD.service')
 
-                print("Getting IP address...")
-                result = conn.run('hostname -I | awk \'{print $1}\'')
-                ip_address = result.stdout.strip()
-                print(f"Device IP address: {ip_address}")
-                ## Write to ip.dat file
-                with open('ip.dat', 'w') as f:
-                    f.write(ip_address + '\n')
-                    f.close()
-                
-
-                
-                print("Starting xvcserver...")
-                conn.run('soft/xvcserver &')
-                conn.close()
-                print("xvcserver started successfully")
+            
+            print("Starting xvcserver...")
+            conn.run('soft/xvcserver &')
+            conn.close()
+            print("xvcserver started successfully")
                 
                 
             print("All commands executed successfully")
