@@ -11,6 +11,7 @@ import paramiko
 #output_dir = time.strftime("%Y%m%d_%H%M%S")
 
 
+
 CLOCK_DIR = '/root/soft/clocks/'
 
 def wait_for_device(hostname, timeout=300, interval=5):
@@ -145,8 +146,10 @@ def write_pygen_tcl(hostname, sleep_time):
     except Exception as e:
         print(f"Error creating pygen.tcl: {str(e)}")
 
-def run_vivado(hostname='local', sleep_time=0, output_dir='.'):
+def run_vivado(hostname='local', sleep_time=0):
     """Run Vivado in batch mode with eyescan.tcl after sourcing settings"""
+    global output_dir
+
     try:
         # Wait for ip.dat to exist and contain an IP
         while not os.path.exists('ip.dat'):
@@ -179,6 +182,8 @@ def run_vivado(hostname='local', sleep_time=0, output_dir='.'):
 
 def monitor_scans(hostname, password=None):
     """Monitor directory for PDFs and check CSV files for Open Area"""
+    global vivado_thread
+    global output_dir
     try:
         while True:
             # Check for PDF count
@@ -277,7 +282,7 @@ if __name__ == "__main__":
         os.makedirs(output_dir)
     print(f"Output directory created: {output_dir}")
 
-    vivado_thread = Thread(target=run_vivado(output_dir=output_dir, sleep_time=120))
+    vivado_thread = Thread(target=run_vivado, kwargs={"sleep_time": 120})
     vivado_thread.daemon = True
     vivado_thread.start()
     
@@ -286,7 +291,7 @@ if __name__ == "__main__":
         program_clocks(hostname, password=password if password else None)
 
         # Start monitoring in separate thread
-    monitor_thread = Thread(target=monitor_scans, args=(hostname, password if password else None))
+    monitor_thread = Thread(target=monitor_scans, args=(hostname, password))
     monitor_thread.daemon = True
     monitor_thread.start()
     
