@@ -180,7 +180,7 @@ def run_vivado(hostname='local', sleep_time=0):
     except Exception as e:
         print(f"Error running Vivado: {str(e)}")
 
-def monitor_scans(hostname, password=None):
+def monitor_scans(hostname, pw=None):
     """Monitor directory for PDFs and check CSV files for Open Area"""
     global vivado_thread
     global output_dir
@@ -239,7 +239,7 @@ def monitor_scans(hostname, password=None):
 
                     # Start new xvcserver
                     # Start monitoring in separate thread
-                    xvcserver = Thread(target=start_xvcserver, args=(hostname, password))
+                    xvcserver = Thread(target=start_xvcserver, args=(hostname, pw))
                     xvcserver.daemon = True
                     xvcserver.start()                                 
                     
