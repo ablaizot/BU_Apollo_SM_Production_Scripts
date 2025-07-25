@@ -83,7 +83,7 @@ def program_clocks(hostname, username='root', password=None, ):
     except Exception as e:
         print(f"Error executing commands: {str(e)}")
     
-def start_xvcserver(hostname, username='root', password=None):
+def start_xvcserver(username='root'):
     global ip_address
     try:
         with Connection(
@@ -180,7 +180,7 @@ def run_vivado(hostname='local', sleep_time=0):
     except Exception as e:
         print(f"Error running Vivado: {str(e)}")
 
-def monitor_scans(hostname, pw=None):
+def monitor_scans():
     """Monitor directory for PDFs and check CSV files for Open Area"""
     global vivado_thread
     global output_dir
@@ -239,7 +239,7 @@ def monitor_scans(hostname, pw=None):
 
                     # Start new xvcserver
                     # Start monitoring in separate thread
-                    xvcserver = Thread(target=start_xvcserver, args=(hostname, pw))
+                    xvcserver = Thread(target=start_xvcserver)
                     xvcserver.daemon = True
                     xvcserver.start()                                 
                     
@@ -259,7 +259,9 @@ def monitor_scans(hostname, pw=None):
     except Exception as e:
         print(f"Error in monitor_scans: {str(e)}")
 
-def valid_connection(hostname, password):
+def valid_connection():
+    global hostname
+    global password
     conn_est = False
     while not conn_est:
         try:
@@ -293,7 +295,7 @@ if __name__ == "__main__":
     change_fw = change_fw == 'yes'  # Convert to boolean
 
     # Check if hostname is reachable
-    valid_connection(hostname, password)
+    valid_connection()
 
     output_dir = time.strftime(f"{hostname}_%Y%m%d_%H%M%S")
     if not os.path.exists(output_dir):
@@ -309,11 +311,11 @@ if __name__ == "__main__":
         program_clocks(hostname, password=password if password else None)
 
         # Start monitoring in separate thread
-    monitor_thread = Thread(target=monitor_scans, args=(hostname, password))
+    monitor_thread = Thread(target=monitor_scans)
     monitor_thread.daemon = True
     monitor_thread.start()
     
     # Start xvcserver
-    start_xvcserver(hostname, password=password if password else None)
+    start_xvcserver()
     
 
