@@ -256,7 +256,7 @@ def monitor_scans(hostname, password=None):
                                          
                     sys.exit(0)
                     
-              # Exit monitoring loop after checking files
+            
                 
             time.sleep(5)  # Wait before checking again
             
@@ -304,7 +304,7 @@ if __name__ == "__main__":
         os.makedirs(output_dir)
     print(f"Output directory created: {output_dir}")
 
-    vivado_thread = Thread(target=run_vivado, kwargs={"sleep_time": 120})
+    vivado_thread = Thread(target=run_vivado, kwargs={"sleep_time": 210})
     vivado_thread.daemon = True
     vivado_thread.start()
     
