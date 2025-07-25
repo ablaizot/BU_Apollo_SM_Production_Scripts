@@ -247,14 +247,23 @@ if __name__ == "__main__":
     
     # Get hostname from user input
     hostname = input("Enter hostname or IP address: ")
-    password = getpass("Enter password (leave empty for key-based auth): ")
     change_fw = input ("Change to Loopback FW? (yes/no): ").strip().lower()
     change_fw = change_fw == 'yes'  # Convert to boolean
 
     # Check if hostname is reachable
     while not wait_for_device(hostname, timeout=15):
-        print(f"Device {hostname} is not reachable. Try again:")
-        hostname = input("Enter hostname or IP address: ")
+        try:
+            with Connection(
+                    host=hostname,
+                    user='root',
+                    connect_kwargs={"password": password}
+                ) as conn:
+                print(f"Device {hostname} is reachable.")
+        except (socket.error, ConnectionError) as e:
+            print(f"Device {hostname} is not reachable. Try again:")
+            hostname = input("Enter hostname or IP address: ")
+            password = getpass("Enter password (leave empty for key-based auth): ")
+
     
     # Call function with user-provided hostname
     if change_fw:
