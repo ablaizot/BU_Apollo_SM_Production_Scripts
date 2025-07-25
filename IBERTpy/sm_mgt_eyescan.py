@@ -125,8 +125,6 @@ def start_xvcserver(hostname, username='root', password=None):
                 f.write(ip_address + '\n')
                 f.close()
             
-
-            
             print("Starting xvcserver...")
             conn.run('soft/xvcserver &')
             conn.close()
@@ -233,16 +231,16 @@ def monitor_scans(hostname, password=None):
                      # Remove all PDFs in output directory
                     for pdf_file in pdf_files:
                         os.remove(pdf_file)
-
-                    # Start new xvcserver
-                    start_xvcserver(hostname, password=password)
-                    
-                    # Create and start new Vivado thread
+                                        # Create and start new Vivado thread
                     vivado_thread = Thread(target=run_vivado, kwargs={"sleep_time": 0})
                     vivado_thread.daemon = True
                     vivado_thread.start()
 
-                    
+                    # Start new xvcserver
+                    # Start monitoring in separate thread
+                    xvcserver = Thread(target=start_xvcserver, args=(hostname, password))
+                    xvcserver.daemon = True
+                    xvcserver.start()                                 
                     
                     print("Services restarted")
                 else:
