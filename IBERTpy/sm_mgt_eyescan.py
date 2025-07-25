@@ -186,6 +186,7 @@ def monitor_scans(hostname, password=None):
     """Monitor directory for PDFs and check CSV files for Open Area"""
     global vivado_thread
     global output_dir
+    print(f"Checking for PDF files in {output_dir}...")
     try:
         while True:
             # Check for PDF count
@@ -237,7 +238,7 @@ def monitor_scans(hostname, password=None):
                     start_xvcserver(hostname, password=password)
                     
                     # Create and start new Vivado thread
-                    vivado_thread = Thread(target=run_vivado(sleep_time=0))
+                    vivado_thread = Thread(target=run_vivado, kwargs={"sleep_time": 0})
                     vivado_thread.daemon = True
                     vivado_thread.start()
 
