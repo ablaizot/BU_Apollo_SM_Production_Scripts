@@ -261,6 +261,7 @@ if __name__ == "__main__":
                     user='root',
                     connect_kwargs={"password": password}
                 ) as conn:
+                conn.run('echo "Connection successful"')
                 conn_est = True
                 print(f"Device {hostname} is reachable.")
         except (socket.error, ConnectionError) as e:
