@@ -51,7 +51,7 @@ def program_clocks(hostname, username='root', password=None, ):
             
             try:
                 print("Rebooting system...")
-                conn.run('reboot')
+                conn.run('reboot',  warn=True)
                 conn.close()
             except Exception as e:  
                 print(f"Error during reboot: {str(e)}")
@@ -89,7 +89,7 @@ def start_xvcserver(hostname, username='root', password=None):
             ) as conn:
             try:
                 print("Rebooting system...")
-                conn.run('reboot')
+                conn.run('reboot', warn=True)
                 conn.close()
             except Exception as e:  
                 print(f"Error during reboot: {str(e)}")
