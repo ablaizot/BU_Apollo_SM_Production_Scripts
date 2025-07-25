@@ -171,7 +171,7 @@ def run_vivado(hostname='local', sleep_time=0):
         cmd = [
             'bash', 
             '-c', 
-            f'cd {output_dir}; source /tools/Xilinx/Vivado/2023.2/settings64.sh && vivado -mode gui -source pygen.tcl'
+            f'cd {output_dir}; source /tools/Xilinx/Vivado/2023.2/settings64.sh && vivado -mode gui -source ../pygen.tcl'
         ]
         
         print("Starting Vivado with pygen.tcl...")
