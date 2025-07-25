@@ -126,6 +126,7 @@ def start_xvcserver(hostname, username='root', password=None):
                 f.close()
             
             print("Starting xvcserver...")
+
             conn.run('soft/xvcserver &')
             conn.close()
             print("xvcserver started successfully")
@@ -246,8 +247,8 @@ def monitor_scans(hostname, password=None):
                 else:
                     print("Saving scans to home directory. Please manually check the scans.")
                     # copy output_dir to home directory
-                    shutil.copytree(output_dir, os.path.expanduser('~/eyecans/'), dirs_exist_ok=True)
-                    print("Scans copied to ~/IBERTpy_scans")
+                    shutil.copytree(output_dir, os.path.expanduser(f'~/eyescans/{output_dir}'), dirs_exist_ok=True)
+                    print("Scans copied to ~/eyescans/")
                                          
                     sys.exit(0)
                     
