@@ -250,7 +250,7 @@ def monitor_scans(hostname, password=None):
                     print("All eyes are valid. Manually check the scans.")
                     sys.exit(0)
                     
-                break  # Exit monitoring loop after checking files
+              # Exit monitoring loop after checking files
                 
             time.sleep(5)  # Wait before checking again
             
