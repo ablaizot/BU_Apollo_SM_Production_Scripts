@@ -9,7 +9,7 @@ import glob
 import csv
 import paramiko
 import sys
-import psutil
+import shutil
 #output_dir = time.strftime("%Y%m%d_%H%M%S")
 
 ip_address = None
@@ -249,7 +249,11 @@ def monitor_scans(hostname, password=None):
                     
                     print("Services restarted")
                 else:
-                    print("All eyes are valid. Manually check the scans.")
+                    print("Saving scans to home directory. Please manually check the scans.")
+                    # copy output_dir to home directory
+                    shutil.copytree(output_dir, os.path.expanduser('~/eyecans/'), dirs_exist_ok=True)
+                    print("Scans copied to ~/IBERTpy_scans")
+                                         
                     sys.exit(0)
                     
               # Exit monitoring loop after checking files
