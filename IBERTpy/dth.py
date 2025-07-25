@@ -9,7 +9,9 @@ import csv
 from getpass import getpass
 import psutil
 from IBERTpy.sm_mgt_eyescan import CLOCK_DIR
+from IBERTpy.sm_mgt_eyescan import valid_connection
 import time
+import paramiko
 
 def run_dth_flashy(hostname, username='root', password=None):
     """
@@ -116,6 +118,8 @@ def main():
         run_dth_flashy('dth', username='DTH', password='userdth')
         hostname = input("Enter hostname or IP address: ")
         password = getpass("Enter password (leave empty for key-based auth): ")
+        valid_connection(hostname, password)
+        
         blackplane_clocks(hostname, username='root', password=password)
 
 
