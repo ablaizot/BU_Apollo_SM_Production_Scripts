@@ -1,0 +1,114 @@
+{
+    "ltx_root": {
+        "version": 4,
+        "minor": 0,
+        "ltx_data": [
+            {
+                "name": "EDA_PROBESET",
+                "active": true,
+                "debug_cores": [
+                    {
+                        "type": "XSDB_V3",
+                        "name": "zynq_bd_wrapper_1/zynq_bd_i/debug_bridge_1/U0/xsdbm",
+                        "spec": "labtools_xsdbm_v3",
+                        "clk_input_freq_hz": "50000000"
+                    },
+                    {
+                        "type": "XSDBS_V2",
+                        "name": "c2c_ibert/u_ibert_gth_core",
+                        "spec": "labtools_xsdbslavelib_v2",
+                        "ipName": "ibert_ultrascale_gth",
+                        "uuid": "1B763A645A99580DB7F3D446B85C4C04"
+                    },
+                    {
+                        "type": "ILA_V3",
+                        "name": "loopback_ila_i",
+                        "spec": "labtools_ila_v6",
+                        "ipName": "ila",
+                        "uuid": "BC8CEC4FCAB55CC08D73FB8901BC4950",
+                        "pins": [
+                            {
+                                "name": "probe0",
+                                "id": 0,
+                                "type": "DATA_TRIGGER",
+                                "direction": "IN",
+                                "isVector": true,
+                                "leftIndex": 0,
+                                "rightIndex": 6,
+                                "portIndex": 0,
+                                "nets": [
+                                    {
+                                        "name": "lb_pat_bits",
+                                        "isBus": true,
+                                        "subnets": [
+                                            {
+                                                "name": "lb_pat_bits[6]"
+                                            },
+                                            {
+                                                "name": "lb_pat_bits[5]"
+                                            },
+                                            {
+                                                "name": "lb_pat_bits[4]"
+                                            },
+                                            {
+                                                "name": "lb_pat_bits[3]"
+                                            },
+                                            {
+                                                "name": "lb_pat_bits[2]"
+                                            },
+                                            {
+                                                "name": "lb_pat_bits[1]"
+                                            },
+                                            {
+                                                "name": "lb_pat_bits[0]"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "name": "probe1",
+                                "id": 1,
+                                "type": "DATA_TRIGGER",
+                                "direction": "IN",
+                                "isVector": true,
+                                "leftIndex": 0,
+                                "rightIndex": 6,
+                                "portIndex": 1,
+                                "nets": [
+                                    {
+                                        "name": "lb_in_bits",
+                                        "isBus": true,
+                                        "subnets": [
+                                            {
+                                                "name": "lb_in_bits[6]"
+                                            },
+                                            {
+                                                "name": "lb_in_bits[5]"
+                                            },
+                                            {
+                                                "name": "lb_in_bits[4]"
+                                            },
+                                            {
+                                                "name": "lb_in_bits[3]"
+                                            },
+                                            {
+                                                "name": "lb_in_bits[2]"
+                                            },
+                                            {
+                                                "name": "lb_in_bits[1]"
+                                            },
+                                            {
+                                                "name": "lb_in_bits[0]"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
