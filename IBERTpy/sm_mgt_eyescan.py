@@ -10,7 +10,7 @@ import csv
 import paramiko
 #output_dir = time.strftime("%Y%m%d_%H%M%S")
 
-
+ip_address = None
 
 CLOCK_DIR = '/root/soft/clocks/'
 
@@ -82,6 +82,7 @@ def program_clocks(hostname, username='root', password=None, ):
         print(f"Error executing commands: {str(e)}")
     
 def start_xvcserver(hostname, username='root', password=None):
+    global ip_address
     try:
         with Connection(
                 host=hostname,
