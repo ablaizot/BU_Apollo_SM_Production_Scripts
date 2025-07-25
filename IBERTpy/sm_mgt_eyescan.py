@@ -137,10 +137,11 @@ def start_xvcserver(hostname, username='root', password=None):
 
 def write_pygen_tcl(hostname, sleep_time):
     """Create pygen.tcl file with required settings"""
+    global ip_address
     try:
         with open('pygen.tcl', 'w') as f:
             f.write(f'set sleep_time {sleep_time}\n')
-            f.write(f'set ip {hostname}\n')
+            f.write(f'set ip {ip_address}\n')
             f.write('source ../eyescan.tcl\n')
         print("Created pygen.tcl file")
     except Exception as e:

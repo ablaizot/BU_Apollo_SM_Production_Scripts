@@ -1,15 +1,6 @@
 open_hw_manager
 connect_hw_server -url localhost:3121 -allow_non_jtag
 # Read IP
-if {[catch {set fp [open "ip.dat" r]} err]} {
-    puts "Error: Could not open ip.dat: $err"
-    puts "Using default IP "
-    set ip 0
-} else {
-    gets $fp ip
-    close $fp
-    puts "Using IP $ip"
-}
 open_hw_target -xvc_url $ip:2542
 set hw_target [get_hw_targets]
 
