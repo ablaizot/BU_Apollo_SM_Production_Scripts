@@ -233,7 +233,9 @@ def monitor_scans(hostname, password=None):
                     if os.path.exists('ip.dat'):
                         os.remove('ip.dat')
                     
-                    os.remove(f"{output_dir}/*.pdf")  # Remove all PDFs in output directory
+                     # Remove all PDFs in output directory
+                    for pdf_file in pdf_files:
+                        os.remove(pdf_file)
 
                     # Start new xvcserver
                     start_xvcserver(hostname, password=password)
