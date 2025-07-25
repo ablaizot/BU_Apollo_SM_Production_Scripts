@@ -141,7 +141,7 @@ def write_pygen_tcl(hostname, sleep_time):
         with open('pygen.tcl', 'w') as f:
             f.write(f'set sleep_time {sleep_time}\n')
             f.write(f'set ip {hostname}\n')
-            f.write('source eyescan.tcl\n')
+            f.write('source ../eyescan.tcl\n')
         print("Created pygen.tcl file")
     except Exception as e:
         print(f"Error creating pygen.tcl: {str(e)}")
