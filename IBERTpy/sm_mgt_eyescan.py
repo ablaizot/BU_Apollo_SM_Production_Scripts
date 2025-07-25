@@ -131,11 +131,6 @@ def start_xvcserver(hostname, username='root', password=None):
             conn.run('soft/xvcserver &')
             conn.close()
             print("xvcserver started successfully")
-                
-                
-            print("All commands executed successfully")
-        else:
-            print("Timeout waiting for device to come back online")
             
     except Exception as e:
         print(f"Error executing commands: {str(e)}")
