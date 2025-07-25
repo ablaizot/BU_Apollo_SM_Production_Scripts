@@ -119,6 +119,11 @@ def start_xvcserver(hostname, username='root', password=None):
                     f.write(ip_address + '\n')
                     f.close()
                 
+                output_dir = time.strftime(f"{hostname}_%Y%m%d_%H%M%S")
+                if not os.path.exists(output_dir):
+                    os.makedirs(output_dir)
+                print(f"Output directory created: {output_dir}")
+                
                 print("Starting xvcserver...")
                 conn.run('soft/xvcserver &')
                 conn.close()
@@ -153,6 +158,8 @@ def run_vivado(hostname='local', sleep_time=0):
         # Read the IP address
         with open('ip.dat', 'r') as f:
             ip = f.read().strip()
+        
+        
         
         # Create pygen.tcl file
         write_pygen_tcl(ip, sleep_time)
