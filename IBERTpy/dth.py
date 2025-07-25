@@ -8,8 +8,8 @@ import glob
 import csv
 from getpass import getpass
 import psutil
-from IBERTpy.sm_mgt_eyescan import CLOCK_DIR
-from IBERTpy.sm_mgt_eyescan import valid_connection
+from sm_mgt_eyescan import CLOCK_DIR
+from sm_mgt_eyescan import valid_connection
 import time
 import paramiko
 
