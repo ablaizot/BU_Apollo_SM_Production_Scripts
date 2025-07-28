@@ -1,5 +1,6 @@
 import serial
 import csv
+import time
 
 def get_mac_address(serial_num):
     """
@@ -40,18 +41,29 @@ def send_command_to_ipmc(serial_number, port='/dev/ttyACM1', baudrate=115200):
         ser.write(b'eepromrd\n')
         s = ser.read(100)
         print(s.decode('utf-8'))
+        time.sleep(1)
         idwr = f'idwr {serial_number}\n'.format(serial_number=serial_number)
         ser.write(b'verwr 2\n')
+        time.sleep(1)
+
         ser.write(b'revwr 3\n')
+        time.sleep(1)
+
         ser.write(b'bootmode 3\n')
+        time.sleep(1)
+
         ser.write(idwr.encode('utf-8'))
 
         for mac_addr in mac_cmds:
             ser.write(mac_addr.encode('utf-8') + b'\n')
+            time.sleep(1)
+
 
         ser.write(b'eepromrd\n')
         s = ser.read(100)
         print(s.decode('utf-8'))
+        time.sleep(1)
+
         ser.close()
 
 
