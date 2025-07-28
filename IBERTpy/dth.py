@@ -10,6 +10,7 @@ from getpass import getpass
 import psutil
 from sm_mgt_eyescan import CLOCK_DIR
 from sm_mgt_eyescan import valid_connection
+from sm_mgt_eyescan import program_clocks
 import time
 import paramiko
 
@@ -96,11 +97,22 @@ def blackplane_clocks(hostname, username='root', password=None, ):
 
 def main():
     """Main function to run Vivado and DTH_Flashy in sequence"""
+
+    hostname = input("Enter hostname or IP address: ")
+    password = getpass("Enter password (leave empty for key-based auth): ")
+
+    
+    clock_thread = Thread(target=program_clocks(hostname, username='root', password=password))
+    clock_thread.daemon = True
+    clock_thread.start()
+
     # Create and start Vivado thread
     vivado_thread = Thread(target=run_vivado)
     vivado_thread.daemon = True
     vivado_thread.start()
     
+    
+
     # Wait for PDF generation
     if wait_for_pdf():
         # Prompt user to continue
@@ -116,9 +128,7 @@ def main():
             except (psutil.NoSuchProcess, psutil.TimeoutExpired):
                 pass
         run_dth_flashy('dth', username='DTH', password='userdth')
-        hostname = input("Enter hostname or IP address: ")
-        password = getpass("Enter password (leave empty for key-based auth): ")
-        valid_connection(hostname, password)
+
         
         blackplane_clocks(hostname, username='root', password=password)
 
