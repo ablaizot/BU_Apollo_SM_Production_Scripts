@@ -38,11 +38,11 @@ def send_command_to_ipmc(serial_number, port='/dev/ttyACM1', baudrate=115200):
     mac_cmds = get_mac_address(serial_number)
 
     cmds = [
-        'eepromrd\n',
-        'verwr 2\n',
-        'revwr 3\n',
-        'bootmode 3\n',
-        f'idwr {serial_number}\n'
+        'eepromrd\r\n',
+        'verwr 2\r\n',
+        'revwr 3\r\n',
+        'bootmode 3\r\n',
+        f'idwr {serial_number}\r\n'
     ]
 
     with serial.Serial(port, baudrate, timeout=1) as ser:
@@ -53,11 +53,9 @@ def send_command_to_ipmc(serial_number, port='/dev/ttyACM1', baudrate=115200):
             print(s.decode('utf-8'))
 
         for mac_addr in mac_cmds:
-            ser.write(mac_addr.encode('utf-8') + b'\n')
+            ser.write((mac_addr+'\r\n').encode('utf-8'))
             time.sleep(1)
 
-
-        ser.write('eepromrd\n')
         s = ser.read(100)
         print(s.decode('utf-8'))
         time.sleep(1)
