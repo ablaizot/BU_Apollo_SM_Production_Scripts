@@ -138,8 +138,7 @@ def start_xvcserver(username='root'):
 def write_pygen_tcl(hostname, sleep_time):
     """Create pygen.tcl file with required settings"""
     global ip_address
-    if not ip_address:
-        ip_address = hostname  # Fallback to hostname if IP not set
+
     try:
         with open('pygen.tcl', 'w') as f:
             f.write(f'set sleep_time {sleep_time}\n')
@@ -152,7 +151,7 @@ def write_pygen_tcl(hostname, sleep_time):
 def run_vivado(hostname='local', sleep_time=0):
     """Run Vivado in batch mode with eyescan.tcl after sourcing settings"""
     global output_dir
-
+    global ip_address
     try:
         # Wait for ip.dat to exist and contain an IP
         while not os.path.exists('ip.dat'):
@@ -160,8 +159,8 @@ def run_vivado(hostname='local', sleep_time=0):
             
         # Read the IP address
         with open('ip.dat', 'r') as f:
-            ip = f.read().strip()
-            print(f"Using IP address from ip.dat: {ip}")
+            ip_address = f.read().strip()
+            print(f"Using IP address from ip.dat: {ip_address}")
         
         # Create pygen.tcl file
         write_pygen_tcl(ip, sleep_time)
