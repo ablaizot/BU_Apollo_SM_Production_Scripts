@@ -1,11 +1,13 @@
 open_hw_manager
 if { [catch {connect_hw_server -url localhost:3121 -allow_non_jtag} fid] } {
     puts stderr "Could not connect_hw_server \n$fid"
-    exit 1
+    open_hw_target -xvc_url $ip:2542
+} 
+else {
+    open_hw_target -xvc_url $ip:2542
 }
-
 # Read IP
-open_hw_target -xvc_url $ip:2542
+
 set hw_target [get_hw_targets]
 
 #close_hw_target hw_target
