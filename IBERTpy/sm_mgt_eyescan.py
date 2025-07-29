@@ -293,7 +293,7 @@ def parse_cli():
     group.add_argument('-b','--hostname', type=str, help='The host name of the Apollo SM.')
     group.add_argument('-ip','--apollo_ip',type=str,help='IP address of apollo')
     parser.add_argument('-p', '--password', type=str, help='Password for SSH connection', default=None)
-    parser.add_argument('-n', '--no_change_fw', action='store_true', help='Change to Loopback FW')
+    parser.add_argument('-n', '--no_change_fw', action='store_true', help='Do not change firmware, just run eyescan')
     parser.add_argument('-v', '--vivado', action='store_true', help='Vivado only')
     parser.add_argument('-s', '--ssd_check', action='store_true', help='Load default FW and check SSD')
 

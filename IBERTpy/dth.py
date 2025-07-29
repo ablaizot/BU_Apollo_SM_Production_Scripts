@@ -12,6 +12,7 @@ from sm_mgt_eyescan import CLOCK_DIR
 from sm_mgt_eyescan import valid_connection
 from sm_mgt_eyescan import program_clocks
 import time
+import argparse
 import paramiko
 
 def run_dth_flashy(hostname, username='root', password=None):
@@ -100,23 +101,51 @@ def backplane_clocks(hostname, username='root', password=None, ):
             print("Switch to backplane clocks in BUtool:")
             conn.run('echo \'w SERV.CLOCKING.HQ_SEL 0\' | BUTool.exe -a')
             conn.run('echo \'w SERV.CLOCKING.LHC_SEL 0\' | BUTool.exe -a')
+            conn.close()
+
+
+def parse_cli():
+    """
+    Parses CLI for apollo test.
+    Can take either IP or board number.
+    """
+
+    parser = argparse.ArgumentParser()
+
+    #parser can take either board number or ip
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('-b','--hostname', type=str, help='The host name of the Apollo SM.')
+    group.add_argument('-ip','--apollo_ip',type=str,help='IP address of apollo')
+    parser.add_argument('-p', '--password', type=str, help='Password for SSH connection', default=None)
+    parser.add_argument('-c', '--change_fw', action='store_true', help='Change to production firmware')
+    parser.add_argument('-v', '--vivado', action='store_true', help='launch vivado')
+    parser.add_argument('-d', '--dth', action='store_true', help='Run DTH_Flashy.py --fpga tcds')
+    parser.add_argument('-b', '--backplane', action='store_true', help='Switch to backplane clocks')
+    args = parser.parse_args()
+    return args
 		
 
 def main():
     """Main function to run Vivado and DTH_Flashy in sequence"""
-
-    hostname = input("Enter hostname or IP address: ")
-    password = getpass("Enter password (leave empty for key-based auth): ")
-
     
-    clock_thread = Thread(target=program_clocks(hostname, username='root', password=password))
-    clock_thread.daemon = True
-    clock_thread.start()
+    args = parse_cli()
 
-    # Create and start Vivado thread
+    # Get hostname from user input
+    hostname = args.hostname
+    password = args.password
+
+    clock_thread = Thread(target=program_clocks(hostname, username='root', password=password))
+
+    if args.change_fw:
+        clock_thread.daemon = True
+        clock_thread.start()
+    
     vivado_thread = Thread(target=run_vivado)
-    vivado_thread.daemon = True
-    vivado_thread.start()
+
+    if args.vivado:
+        # Create and start Vivado thread
+        vivado_thread.daemon = True
+        vivado_thread.start()
     
     
 
@@ -134,16 +163,18 @@ def main():
                     proc.wait(timeout=5)  # Wait for process to terminate
             except (psutil.NoSuchProcess, psutil.TimeoutExpired):
                 pass
-        run_dth_flashy('dth', username='DTH', password='userdth')
+        if args.dth:
+            run_dth_flashy('dth', username='DTH', password='userdth')
 
-        
-        backplane_clocks(hostname, username='root', password=password)
+        if args.backplane:
+            backplane_clocks(hostname, username='root', password=password)
 
 
     else:
         print("Timeout waiting for PDF file generation")
 
     # Wait for Vivado thread to complete
+    clock_thread.join()
     vivado_thread.join()
 
 if __name__ == "__main__":
