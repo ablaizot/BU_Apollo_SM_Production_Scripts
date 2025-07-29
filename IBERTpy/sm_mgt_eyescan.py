@@ -158,7 +158,8 @@ def run_vivado(hostname='local', sleep_time=0):
             
         # Read the IP address
         with open('ip.dat', 'r') as f:
-            ip = f.read().strip()        
+            ip = f.read().strip()
+            print(f"Using IP address from ip.dat: {ip}")
         
         # Create pygen.tcl file
         write_pygen_tcl(ip, sleep_time)
