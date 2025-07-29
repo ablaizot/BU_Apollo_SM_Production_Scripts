@@ -10,6 +10,7 @@ import csv
 import paramiko
 import sys
 import shutil
+import argparse
 #output_dir = time.strftime("%Y%m%d_%H%M%S")
 
 ip_address = None
@@ -260,6 +261,8 @@ def monitor_scans():
         print(f"Error in monitor_scans: {str(e)}")
 
 def valid_connection():
+
+
     global hostname
     global password
     conn_est = False
@@ -279,20 +282,37 @@ def valid_connection():
             password = getpass("Enter password (leave empty for key-based auth): ")
 
 
+def parse_cli():
+    """
+    Parses CLI for apollo test.
+    Can take either IP or board number.
+    """
+
+    parser = argparse.ArgumentParser()
+
+    #parser can take either board number or ip
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument('-b','--hostname', type=str, help='The host name of the Apollo SM.')
+    group.add_argument('-ip','--apollo_ip',type=str,help='IP address of apollo')
+    parser.add_argument('-p', '--password', type=str, help='Password for SSH connection', default=None)
+    parser.add_argument('-n', '--no_change_fw', action='store_true', help='Change to Loopback FW')
+    parser.add_argument('-v', '--vivado', action='store_true', help='Vivado only')
+
+    args = parser.parse_args()
+    return args
+
 if __name__ == "__main__":
     # Start Vivado process in separate thread
     # delete ip.dat file
-    if os.path.exists('ip.dat'):
+    args = parse_cli()
+
+    if os.path.exists('ip.dat') and not args.vivado:
         os.remove('ip.dat')
 
-
-    
     # Get hostname from user input
-    hostname = input("Enter hostname or IP address: ")
-    password = getpass("Enter password (leave empty for key-based auth): ")
+    hostname = args.hostname
+    password = args.password
 
-    change_fw = input ("Change to Loopback FW? (yes/no): ").strip().lower()
-    change_fw = change_fw == 'yes'  # Convert to boolean
 
     # Check if hostname is reachable
     valid_connection()
@@ -307,15 +327,16 @@ if __name__ == "__main__":
     vivado_thread.start()
     
     # Call function with user-provided hostname
-    if change_fw:
+    if not args.no_change_fw:
         program_clocks(hostname, password=password if password else None)
 
-        # Start monitoring in separate thread
+    # Start monitoring in separate thread
     monitor_thread = Thread(target=monitor_scans)
     monitor_thread.daemon = True
     monitor_thread.start()
     
     # Start xvcserver
-    start_xvcserver()
+    if not args.vivado:
+        start_xvcserver()
     
 
