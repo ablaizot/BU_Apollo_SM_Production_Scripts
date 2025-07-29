@@ -158,9 +158,7 @@ def run_vivado(hostname='local', sleep_time=0):
             
         # Read the IP address
         with open('ip.dat', 'r') as f:
-            ip = f.read().strip()
-        
-        
+            ip = f.read().strip()        
         
         # Create pygen.tcl file
         write_pygen_tcl(ip, sleep_time)
@@ -339,7 +337,7 @@ if __name__ == "__main__":
     if not args.vivado:
         start_xvcserver()
     
-    vivado_thread.join(timeout=1)
-    monitor_thread.join(timeout=1)
+    vivado_thread.join(timeout=10)
+    monitor_thread.join(timeout=10)
     
 
