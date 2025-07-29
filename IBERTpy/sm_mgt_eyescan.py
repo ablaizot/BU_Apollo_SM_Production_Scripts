@@ -339,7 +339,7 @@ if __name__ == "__main__":
     if not args.vivado:
         start_xvcserver()
     
-    vivado_thread.join(timeout=10)
-    monitor_thread.join(timeout=10)
+    vivado_thread.join()
+    monitor_thread.join()
     
 
