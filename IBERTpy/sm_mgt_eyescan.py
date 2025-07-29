@@ -163,7 +163,7 @@ def run_vivado(hostname='local', sleep_time=0):
             print(f"Using IP address from ip.dat: {ip_address}")
         
         # Create pygen.tcl file
-        write_pygen_tcl(ip, sleep_time)
+        write_pygen_tcl(ip_address, sleep_time)
             
         # Wait a bit for xvcserver to start
         time.sleep(5)
