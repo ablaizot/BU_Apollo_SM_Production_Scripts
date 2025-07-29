@@ -72,7 +72,7 @@ def wait_for_pdf(timeout=500, interval=5):
         time.sleep(interval)
     return False
 
-def blackplane_clocks(hostname, username='root', password=None, ):
+def backplane_clocks(hostname, username='root', password=None, ):
     with Connection(
         host=hostname,
         user=username,
@@ -94,6 +94,13 @@ def blackplane_clocks(hostname, username='root', password=None, ):
 
         except Exception as e:
             print(f"Error executing commands: {str(e)}")
+            time.sleep(10)
+            conn.run(f'{CLOCK_DIR}clock_sync_320M_LHC {CLOCK_DIR}CONFIGS/CONFIG.toml')
+
+            print("Switch to backplane clocks in BUtool:")
+            conn.run('echo \'w SERV.CLOCKING.HQ_SEL 0\' | BUTool.exe -a')
+            conn.run('echo \'w SERV.CLOCKING.LHC_SEL 0\' | BUTool.exe -a')
+		
 
 def main():
     """Main function to run Vivado and DTH_Flashy in sequence"""
@@ -130,7 +137,7 @@ def main():
         run_dth_flashy('dth', username='DTH', password='userdth')
 
         
-        blackplane_clocks(hostname, username='root', password=password)
+        backplane_clocks(hostname, username='root', password=password)
 
 
     else:
