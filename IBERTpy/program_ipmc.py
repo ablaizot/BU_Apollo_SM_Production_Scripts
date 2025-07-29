@@ -43,29 +43,31 @@ def send_command_to_ipmc(serial_number, port='/dev/ttyACM1', baudrate=115200):
         'revwr 3\r\n',
         'bootmode 3\r\n',
         f'idwr {serial_number}\r\n'
-    ]
+    ]   
+    for i in range(4):
+        with serial.Serial(port, baudrate, timeout=2) as ser:
 
-    with serial.Serial(port, baudrate, timeout=2) as ser:
+            for cmd in cmds:
+                time.sleep(0.2)
+                ser.write(cmd.encode('utf-8'))            
+                s = ser.read(200)
+                time.sleep(0.2)
+                print(s.decode('utf-8'))
 
-        for cmd in cmds:
-            time.sleep(0.2)
-            ser.write(cmd.encode('utf-8'))            
+            for mac_addr in mac_cmds:
+                ser.write((mac_addr+'\r\n').encode('utf-8'))
+                s = ser.read(200)
+                print(s.decode('utf-8'))
+                time.sleep(0.2)
+
+
             s = ser.read(200)
-            time.sleep(0.2)
             print(s.decode('utf-8'))
+            time.sleep(1)
 
-        for mac_addr in mac_cmds:
-            ser.write((mac_addr+'\r\n').encode('utf-8'))
-            s = ser.read(200)
-            print(s.decode('utf-8'))
-            time.sleep(0.2)
+            ser.close()
             
 
-        s = ser.read(200)
-        print(s.decode('utf-8'))
-        time.sleep(1)
-
-        ser.close()
 
 
 if __name__ == "__main__":
