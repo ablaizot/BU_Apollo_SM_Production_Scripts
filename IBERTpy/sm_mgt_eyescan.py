@@ -309,6 +309,7 @@ def check_ssd():
             user='root',
             connect_kwargs={"password": password}
         ) as conn:
+        conn.run('lsblk')
         conn.run('mkdir /mnt/ssd')
         conn.run('mount /dev/sda1 /mnt/ssd')
         conn.run('cd /mnt/ssd && ls -l')
@@ -358,6 +359,7 @@ if __name__ == "__main__":
 
     if args.ssd_check:
         program_clocks(hostname, password=password if password else None)
+        check_ssd()
 
 
     
