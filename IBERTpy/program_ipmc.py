@@ -49,7 +49,7 @@ def send_command_to_ipmc(serial_number, port='/dev/ttyACM1', baudrate=115200):
 
         for cmd in cmds:
             ser.write(cmd.encode('utf-8'))            
-            s = ser.read(100)
+            s = ser.read(200)
             time.sleep(0.2)
             print(s.decode('utf-8'))
 
