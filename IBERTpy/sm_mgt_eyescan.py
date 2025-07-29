@@ -251,7 +251,7 @@ def monitor_scans():
                     shutil.copytree(output_dir, os.path.expanduser(f'~/eyescans/{output_dir}'), dirs_exist_ok=True)
                     print("Scans copied to ~/eyescans/")
                                          
-                    sys.exit(0)
+                    break
                     
             
                 
@@ -261,8 +261,6 @@ def monitor_scans():
         print(f"Error in monitor_scans: {str(e)}")
 
 def valid_connection():
-
-
     global hostname
     global password
     conn_est = False
@@ -297,9 +295,25 @@ def parse_cli():
     parser.add_argument('-p', '--password', type=str, help='Password for SSH connection', default=None)
     parser.add_argument('-n', '--no_change_fw', action='store_true', help='Change to Loopback FW')
     parser.add_argument('-v', '--vivado', action='store_true', help='Vivado only')
+    parser.add_argument('-s', '--ssd_check', action='store_true', help='Load default FW and check SSD')
 
     args = parser.parse_args()
     return args
+
+def check_ssd():
+    global hostname
+    global password
+
+    with Connection(
+            host=hostname,
+            user='root',
+            connect_kwargs={"password": password}
+        ) as conn:
+        conn.run('mkdir /mnt/ssd')
+        conn.run('mount /dev/sda1 /mnt/ssd')
+        conn.run('cd /mnt/ssd && ls -l')
+        conn.run('cd && umount /mnt/ssd')
+
 
 if __name__ == "__main__":
     # Start Vivado process in separate thread
@@ -341,5 +355,10 @@ if __name__ == "__main__":
     
     vivado_thread.join()
     monitor_thread.join()
+
+    if args.ssd_check:
+        program_clocks(hostname, password=password if password else None)
+
+
     
 
