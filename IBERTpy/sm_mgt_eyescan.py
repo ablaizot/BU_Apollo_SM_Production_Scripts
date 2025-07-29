@@ -138,6 +138,8 @@ def start_xvcserver(username='root'):
 def write_pygen_tcl(hostname, sleep_time):
     """Create pygen.tcl file with required settings"""
     global ip_address
+    if not ip_address:
+        ip_address = hostname  # Fallback to hostname if IP not set
     try:
         with open('pygen.tcl', 'w') as f:
             f.write(f'set sleep_time {sleep_time}\n')
