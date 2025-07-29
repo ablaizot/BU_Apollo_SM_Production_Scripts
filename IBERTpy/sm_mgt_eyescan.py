@@ -251,7 +251,7 @@ def monitor_scans():
                     shutil.copytree(output_dir, os.path.expanduser(f'~/eyescans/{output_dir}'), dirs_exist_ok=True)
                     print("Scans copied to ~/eyescans/")
                                          
-                    break
+                    return
                     
             
                 
