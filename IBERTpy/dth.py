@@ -120,7 +120,7 @@ def parse_cli():
     parser.add_argument('-c', '--change_fw', action='store_true', help='Change to production firmware')
     parser.add_argument('-v', '--vivado', action='store_true', help='launch vivado')
     parser.add_argument('-d', '--dth', action='store_true', help='Run DTH_Flashy.py --fpga tcds')
-    parser.add_argument('-b', '--backplane', action='store_true', help='Switch to backplane clocks')
+    parser.add_argument('-a', '--backplane', action='store_true', help='Switch to backplane clocks')
     args = parser.parse_args()
     return args
 		
