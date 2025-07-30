@@ -349,11 +349,14 @@ if __name__ == "__main__":
     monitor_thread = Thread(target=monitor_scans)
     monitor_thread.daemon = True
     monitor_thread.start()
-    
+
+    xvc_thread = Thread(target=start_xvcserver)
+    xvc_thread.daemon = True
     # Start xvcserver
     if not args.vivado:
-        start_xvcserver()
+        xvc_thread.start()
     
+    xvc_thread.join(timeout=60)
     vivado_thread.join()
     monitor_thread.join()
 
