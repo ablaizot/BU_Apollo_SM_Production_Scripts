@@ -296,6 +296,7 @@ def parse_cli():
     parser.add_argument('-n', '--no_change_fw', action='store_true', help='Do not change firmware, just run eyescan')
     parser.add_argument('-v', '--vivado', action='store_true', help='Vivado only')
     parser.add_argument('-s', '--ssd_check', action='store_true', help='Load default FW and check SSD')
+    parser.add_argument('-t', '--timeout', type=int, default=210, help='Vivado BERT time')
 
     args = parser.parse_args()
     return args
@@ -337,7 +338,7 @@ if __name__ == "__main__":
         os.makedirs(output_dir)
     print(f"Output directory created: {output_dir}")
 
-    vivado_thread = Thread(target=run_vivado, kwargs={"sleep_time": 210})
+    vivado_thread = Thread(target=run_vivado, kwargs={"sleep_time": args.timeout})
     vivado_thread.daemon = True
     vivado_thread.start()
     
