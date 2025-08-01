@@ -8,7 +8,7 @@ open_hw_target
 
 set_property PROBES.FILE {} [get_hw_devices xcku15p_0]
 set_property FULL_PROBES.FILE {} [get_hw_devices xcku15p_0]
-set_property PROGRAM.FILE {/home/ablaizot/dth_ibert.bit} [get_hw_devices xcku15p_0]
+set_property PROGRAM.FILE {dth_ibert.bit} [get_hw_devices xcku15p_0]
 program_hw_devices [get_hw_devices xcku15p_0]
 
 current_hw_device [get_hw_devices xcku15p_0]
