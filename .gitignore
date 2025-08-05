@@ -15,6 +15,10 @@ IBERTpy/latex/*.aux
 IBERTpy/latex/*.out
 IBERTpy/latex/*.pdf
 IBERTpy/latex/*.toc
+IBERTpy/*.pdf
+IBERTpy/*.csv
+IBERTpy/*.png
+
 
 # Scan results
 scans/CM203/

@@ -17,7 +17,7 @@ def get_mac_address(serial_num):
 
         look = [f"apollo{serial_num}-0", f"apollo{serial_num}-1" , f"ipmc{serial_num}"]
         
-        with open('mac_addr.csv', 'r') as f:
+        with open('../mac_addr.csv', 'r') as f:
             reader = csv.reader(f, delimiter='\t')
             for row in reader:
                 if len(row) >= 4:

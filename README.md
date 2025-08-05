@@ -1,47 +1,86 @@
-# Scripts Used for Cornell CM Produciton Checkout
+# Scripts Used for BU SM Produciton Checkout
+These scripts are used to automate production of the Apollo SM. The complete instructions are [here](https://apollo-lhc.gitlab.io/Assembly/Rev3-assembly/)
 
-## IBERTpy Plotting Script
+This repo was forked from https://github.com/apollo-lhc/Cornell_CM_Production_Scripts/.  The IBERTpy is a set of modified scripts from https://github.com/mvsoliveira/IBERTpy to convert Vivado eyescans from .csv to .pdf and .png formats. 
+
+
+## Program IPMC
 ### Overview
-`mcu_tools` submodule contains automate scripts in the shell directory to create a weekly-report directory in `/nfs/cms/hw/apollo/` and run C2C eyescans on any apollo blades. We note that currently a one-by-one eyescan and parallel eyescans are enable. The exception is that on apollo09 only three* out of four c2c links are working.  
+The IPMC paramaters are initally set over serial. 
+
+This script is run on adpsun1 at BU.
+### Requirements
+Make sure to use a virtaul environment if this script is being run as root.
+- **Python 3+**
+- **pyserial** 
+
+### Instructions
+Once the IPMC fw is programmed, run the following to set the parameters:
+```
+python3 program_ipmc.py
+```
+Enter the serial number into the prompt.
+
+### Results
+Verify the result by connecting to the IPMC directly with screen.
+
+
+## SM MGT Script
+### Overview
+Testing the assembled SM involves two uses of IBERTpy. Testing the SM MGTs is done with ```sm_mgt_eyescan.py```, which programs the clocks, loads the loopback firmware, starts the xvcserver, and runs the eyescans provided that the SM is mated to a CM loopback board.
+
+This script is run on minion at BU.
 ### Requirements
 - **Python 3+**
 - **fpdf** (the package used to make a pdf file from converting a csv file of a Vivado eyescan. For instruction on how to install it, please follow https://github.com/reingart/pyfpdf) 
+- **matplotlib**
+- **pandas**
+- **fabric** (the package used to execute arbitrary commands over ssh )
+- **vivado** (The script sources vivado from /tools/Xilinx/Vivado/2023.2/settings64.sh)
 ### Instructions
-The IBERTpy is a set of modified scripts from https://github.com/mvsoliveira/IBERTpy to convert Vivado eyescans from .csv to .pdf and .png formats. The path to a csv input file is structured for Cornell CM Production in the following manner: **Cornell_CM_Production_Scripts/scans/CM#/mm-dd-yy/*.csv'**. 
+Create a eyescans folder in the home directory.
 
-To generate these csv files, first connect to the CM203 in Vivado.  Program the FPGAs with the desired firmware.  If the CM203 is connected to the lnx4189, the following firmware properly programs the two FPGAs for eyescans of the standard links:
-```sh
-FPGA1 bitstream: /mnt/scratch/rz393/firmware/top_Cornell_rev2_p1_VU13p-1-SM_7s_IBERT_lpGBT_v1_25GLHS.bit
-FPGA2 bitstream: /mnt/scratch/rz393/firmware/top_Cornell_rev2_p2_VU13p-1-SM_7s_IBERT_lpGBT_v1_25GLHS.bit
+The hostname comes in the Apollo####-# format. Once the CM loopback board is mated, and the SM connected to the network, test the SM MGTs by running:
+```
+python3 sm_mgt_eyescan.py -b [hostname] -p [password]
 ```
 
-Next, set the MGT links.  Autodetect links often misses several of the links, so instead run the command below in the Vivado tcl console:
-```sh
-source <path to this imported repository>/Cornell_CM_Production_Scripts/autotuning/tcl/CM_VU13P_setup_IBERT.tcl
+If the xvcserver is started, add the ```v``` flag to skip directly to starting the eyescan.
+
+```
+python3 sm_mgt_eyescan.py -b [hostname] -p [password] -v
 ```
 
-We can now run eyescans over all of these links, but first we must create a directories in which to save the csv files.  The current version of the command that runs the eyescans in Vivado saves the scans to two locations: once into the downloaded Cornell_CM_ProductionScripts output directories and once into the shared track trigger output directories (<date> should be of the form mm-dd-yy):
-```sh
-mkdir <path to this imported repository>/Cornell_CM_Production_Scripts/scans/CM203/<date>
-mkdir /nfs/cms/tracktrigger/apollo/CM203/scans/<date>
+Before running the eyescan, the tcl script called by sm_mgt_eyescan will wait so that the BER can be seen dropping below 1E-12. This time can be changed with the ```t``` flag.
+
+### Results
+The eyescans automatically be rerun if the eyes are completely closed since Vivado occasionally fails to perform eyescans on perfectly operational links. If all the links are at least partially open, the eyescan csv, and the generated pdf and png, will be saved to the eyescan folder in the home directory.
+
+##  DTH Script
+### Overview
+Testing the DTH links to the SM is done with ```dth.py```. This launches vivado lab, which programs the DTH FPGA with an IBERT fw and runs a sweep on the link to find the one with the maximum open area. The DTH is then repgrommed with the DTH fw. The clocks on the SM are programmed and routed to the loopback CM so that they can be scoped. 
+
+This script is run on server-room at BU.
+### Requirements
+- **Python 3+**
+- **fpdf** (the package used to make a pdf file from converting a csv file of a Vivado eyescan. For instruction on how to install it, please follow https://github.com/reingart/pyfpdf) 
+- **matplotlib**
+- **pandas**
+- **fabric** (the package used to execute arbitrary commands over ssh )
+- **vivado lab** (The script sources vivado lab from /home/tools/Xilinx/Vivado_Lab/2024.1/settings64.sh)
+### Instructions
+Create a eyescans folder in the home directory.
+
+The hostname comes in the Apollo####-# format. Once the SM is in an ATCA crate with a DTH board, and the SM connected to the network, test the DTH link by running:
+```
+python3 dth.py -b [hostname] -p [password] -v -d -a 
 ```
 
-Then, modify line 9 of <path to this imported repository>/Cornell_CM_Production_Scripts/autotuning/tcl/apollo10_eyescan.tcl so that the date in the file path corresponds to the directory in which you wish to save the results of the scans, and run the following command in the tcl console to run eyescans over all of the links that we just set:
-```sh
-source <path to this imported repository>/Cornell_CM_Production_Scripts/autotuning/tcl/apollo10_eyescan.tcl
-```
+If the SM does not have the production fw loaded, add the ```c``` flag.
 
-To convert a csv input file to a pdf + png file and store them in the same directory as the csv input file, run the following command in <path to this imported repository>/Cornell_CM_Production_Scripts/IBERTpy/python, where <board> is the id of the scanned board (e.g. CM203) and date is of the form mm-dd-yy:
-```sh
-$ python3 generate_all_plots.py <board> <date of scans>
-```
+### Results
+The best eyescan of the sweep is saved in the directory the script was run in.
 
-After generating pdfs and png files, one can generate a summary pdf that organizes all eyescans of the standard CM203 MGT configuration into a more easily navigated summary document by entering the following command in <path to this imported repository>/Cornell_CM_Production_Scripts/IBERTpy/latex:
-```sh
-$ pdflatex --jobname=<desired name of output file, don't add on ".pdf"> "\def\dateofscans{<date of scans>} \input{eyescan_summary.tex}"
-```
-Upon encountering a warning, type the letter r and hit enter to force the computer to ignore all further warnings.  If you wish to save the output files to a different directory you can add --output-directory=<desired output directory> as an additional argument after --jobname.
-  
 ## C2C-link Eyescans Script
 - **Python 2.7** 
 - **lnx4189.classe.cornell.edu machine** 
