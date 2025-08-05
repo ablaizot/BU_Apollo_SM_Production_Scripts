@@ -344,6 +344,7 @@ if __name__ == "__main__":
     
     # Call function with user-provided hostname
     if not args.no_change_fw or not args.vivado:
+        print("Starting clock function...")
         program_clocks(hostname, password=password if password else None)
 
     # Start monitoring in separate thread
@@ -355,6 +356,7 @@ if __name__ == "__main__":
     xvc_thread.daemon = True
     # Start xvcserver
     if not args.vivado:
+        print("Starting xvcserver thread...")
         xvc_thread.start()
     
     if not args.vivado:
