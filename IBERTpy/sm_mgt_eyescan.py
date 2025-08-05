@@ -164,7 +164,7 @@ def run_vivado(hostname='local', sleep_time=0):
         
         # Create pygen.tcl file
         write_pygen_tcl(ip_address, sleep_time)
-            
+        
         # Wait a bit for xvcserver to start
         time.sleep(5)
         
@@ -343,7 +343,7 @@ if __name__ == "__main__":
     vivado_thread.start()
     
     # Call function with user-provided hostname
-    if not args.no_change_fw or args.vivado:
+    if not args.no_change_fw or not args.vivado:
         program_clocks(hostname, password=password if password else None)
 
     # Start monitoring in separate thread
