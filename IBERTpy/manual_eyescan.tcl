@@ -51,7 +51,7 @@ foreach ln $links {
         run_hw_sio_scan [get_hw_sio_scans $xil_newScan]
         wait_on_hw_sio_scan [get_hw_sio_scans $xil_newScan]
         write_hw_sio_scan -force $fname [get_hw_sio_scans $xil_newScan]
-        exec /usr/bin/python3 generate_plot.py $fname
+        exec /usr/bin/python3 ../generate_plot.py $fname
     }
     incr i 1
 }
