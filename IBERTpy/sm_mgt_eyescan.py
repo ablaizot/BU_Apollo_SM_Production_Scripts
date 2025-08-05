@@ -343,7 +343,7 @@ if __name__ == "__main__":
     vivado_thread.start()
     
     # Call function with user-provided hostname
-    if not args.no_change_fw:
+    if not args.no_change_fw or args.vivado:
         program_clocks(hostname, password=password if password else None)
 
     # Start monitoring in separate thread
