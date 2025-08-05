@@ -7,6 +7,7 @@ if { [catch {connect_hw_server -url localhost:3121 -allow_non_jtag} fid] } {
 }  else {
     catch {open_hw_target -xvc_url $ip:2542}
 }
+}
 # Read IP
 
 set hw_target [get_hw_targets]
