@@ -1,0 +1,47 @@
+<node id="MONITOR">
+  <node id="COUNT_16X_BAUD"       address="0x0" mask="0x000000FF" permission="rw" description="Baud 16x counter.  Set by 50Mhz/(baudrate(hz) * 16). Nominally 27" parameters="Table=CM_UART_MON;Column=_2_3;Row=COUNT_16X_BAUD;Status=4;default=0x1B" />
+  <node id="ACTIVE"               address="0x0" mask="0x00000100" permission="r"  description="Monitoring active. Is zero when no update in the last second." parameters="Table=CM_UART_MON;Column=_2;Row=MON_STATE;Status=1;Show=z;Format=t_0_INACTIVE_1_ACTIVE" />
+  <node id="ENABLE"               address="0x0" mask="0x00010000" permission="rw" description="Enable readout" parameters="Table=CM_UART_MON;Column=_2;Row=MON_ENABLE;Status=2;default=0x0"/>
+  <node id="HISTORY"              address="0x1">
+    <node id="VALID"                address="0x0" mask="0x0000001F" permission="r"  description="bytes valid in debug history"/>
+    <node id="HISTORY_0"            address="0x1" mask="0x000000FF" permission="r"  description="byte 0 of uart history"/>
+    <node id="HISTORY_1"            address="0x1" mask="0x0000FF00" permission="r"  description="byte 1 of uart history"/>
+    <node id="HISTORY_2"            address="0x1" mask="0x00FF0000" permission="r"  description="byte 2 of uart history"/>
+    <node id="HISTORY_3"            address="0x1" mask="0xFF000000" permission="r"  description="byte 3 of uart history"/>
+    <node id="HISTORY_4"            address="0x2" mask="0x000000FF" permission="r"  description="byte 4 of uart history"/>
+  </node>
+
+  <node id="BAD_TRANS"            address="0x3">
+    <node id="ADDR"                             address="0x0" mask="0x000003FF" permission="r"  description="Sensor addr bits"  parameters="Table=CM_UART_MON;Column=_2_4;Row=_5;Status=2"/>
+    <node id="DATA"                             address="0x0" mask="0xFFFF0000" permission="r"  description="Sensor data bits"  parameters="Table=CM_UART_MON;Column=_2_4;Row=_5;Status=2"/>
+    <node id="ERROR_MASK"                       address="0x1" mask="0x000000FF" permission="r"  description="Sensor error bits" parameters="Table=CM_UART_MON;Column=_2_4;Row=_5;Status=2;Format=t_0_OK_1_BadSOF_2_AXIBusyByte2_4_Byte2NotData_8_Byte3NotData_16_Byte4NotData_32_Byte5NotData_64_UNKNOWN"/>
+    <node id="RESERVED"                         address="0x1" mask="0x000F0000" permission="r"  description="Sensor reserved bits"  parameters="Table=CM_UART_MON;Column=_2_4;Row=_5;Status=2"/>
+  </node>
+  
+  <node id="LAST_TRANS"           address="0x4">
+    <node id="ADDR"                             address="0x0" mask="0x000003FF" permission="r"  description="Sensor addr bits"  parameters="Table=CM_UART_MON;Column=_2_4;Row=_5;Status=2"/>
+    <node id="DATA"                             address="0x0" mask="0xFFFF0000" permission="r"  description="Sensor data bits"  parameters="Table=CM_UART_MON;Column=_2_4;Row=_5;Status=2"/>
+    <node id="ERROR_MASK"                       address="0x1" mask="0x000000FF" permission="r"  description="Sensor error bits" parameters="Table=CM_UART_MON;Column=_2_4;Row=_5;Status=2;Format=t_0_OK_1_BadSOF_2_AXIBusyByte2_4_Byte2NotData_8_Byte3NotData_16_Byte4NotData_32_Byte5NotData_64_UNKNOWN"/>
+    <node id="RESERVED"                         address="0x1" mask="0x000F0000" permission="r"  description="Sensor reserved bits"  parameters="Table=CM_UART_MON;Column=_2_4;Row=_5;Status=2"/>
+  </node>
+  
+  <node id="ERRORS"               address="0x6">
+    <node id="RESET"              address="0x0" mask="0x00000001" permission="rw" description="Reset monitoring error counters"/>
+    <node id="CNT_BAD_SOF"        address="0x1" mask="0x0000FFFF" permission="r"  description="Monitoring errors. Count of invalid byte types in parsing." parameters="Table=CM_UART_MON;Column=_5;Row=_4;Status=1;Show=nz;Format=u"/>
+    <node id="CNT_AXI_BUSY_BYTE2" address="0x1" mask="0xFFFF0000" permission="r"  description="Monitoring errors. Count of invalid byte types in parsing." parameters="Table=CM_UART_MON;Column=_5;Row=_4;Status=1;Show=nz;Format=u"/>
+    <node id="CNT_SOF_V1"         address="0x2" mask="0x0000FFFF" permission="r"  description="Monitoring errors. Count of invalid byte types in parsing." parameters="Table=CM_UART_MON;Column=_5;Row=_4;Status=1;Show=nz;Format=u"/>
+    <node id="CNT_SOF_V2"         address="0x2" mask="0x0000FFFF" permission="r"  description="Monitoring errors. Count of invalid byte types in parsing." parameters="Table=CM_UART_MON;Column=_5;Row=_4;Status=1;Show=nz;Format=u"/>
+    <node id="CNT_BYTE2_NOT_DATA" address="0x3" mask="0x0000FFFF" permission="r"  description="Monitoring errors. Count of invalid byte types in parsing." parameters="Table=CM_UART_MON;Column=_5;Row=_4;Status=1;Show=nz;Format=u"/>
+    <node id="CNT_BYTE3_NOT_DATA" address="0x3" mask="0xFFFF0000" permission="r"  description="Monitoring errors. Count of invalid byte types in parsing." parameters="Table=CM_UART_MON;Column=_5;Row=_4;Status=1;Show=nz;Format=u"/>
+    <node id="CNT_BYTE4_NOT_DATA" address="0x4" mask="0x0000FFFF" permission="r"  description="Monitoring errors. Count of invalid byte types in parsing." parameters="Table=CM_UART_MON;Column=_5;Row=_4;Status=1;Show=nz;Format=u"/>
+    <node id="CNT_BYTE5_NOT_DATA" address="0x4" mask="0xFFFF0000" permission="r"  description="Monitoring errors. Count of invalid byte types in parsing." parameters="Table=CM_UART_MON;Column=_5;Row=_4;Status=1;Show=nz;Format=u"/>
+    <node id="CNT_TIMEOUT"        address="0x5" mask="0xFFFF0000" permission="r"  description="Monitoring errors. Count of invalid byte types in parsing." parameters="Table=CM_UART_MON;Column=_5;Row=_4;Status=1;Show=nz;Format=u"/>
+    <node id="CNT_UNKNOWN"        address="0x5" mask="0x0000FFFF" permission="r"  description="Monitoring errors. Count of invalid byte types in parsing." parameters="Table=CM_UART_MON;Column=_5;Row=_4;Status=1;Show=nz;Format=u"/>
+    <node id="CNT_V1"        address="0x6" mask="0x0000FFFF" permission="r"  description="Monitoring errors. Count of invalid byte types in parsing." parameters="Table=CM_UART_MON;Column=_5;Row=_4;Status=1;Show=nz;Format=u"/>
+    <node id="CNT_V2"        address="0x6" mask="0xFFFF0000" permission="r"  description="Monitoring errors. Count of invalid byte types in parsing." parameters="Table=CM_UART_MON;Column=_5;Row=_4;Status=1;Show=nz;Format=u"/>    
+  </node>
+
+  <node id="SM_TIMEOUT"           address="0xF" mask="0xFFFFFFFF" permission="rw" description="Count to wait for in state machine before timing out (50Mhz clk)" parameters="default=0x1FCA0" />
+  <node id="UART_BYTES"           address="0x10" mask="0xFFFFFFFF" permission="r"  description="Count of UART bytes from CM MCU" parameters="Table=CM_UART_MON;Column=_2_3;Row=UART_BYTES;Status=3;Format=u"/>
+
+</node>

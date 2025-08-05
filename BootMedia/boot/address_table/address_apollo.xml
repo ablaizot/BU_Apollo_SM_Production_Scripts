@@ -1,0 +1,16 @@
+<node id="TOP">
+  <node id="AXI_MON"          address="auto"  fwinfo="uio_endpoint"  module="file://modules_rev2a_xczu7ev/AXI_MONITOR.xml"                  />
+  <node id="C2C1_AXILITE_FW"  address="auto"  fwinfo="uio_endpoint"  module="file://modules_rev2a_xczu7ev/C2C1_AXILITE_FW.xml"                  />
+  <node id="C2C1_AXI_FW"      address="auto"  fwinfo="uio_endpoint"  module="file://modules_rev2a_xczu7ev/C2C1_AXI_FW.xml"                  />
+  <node id="C2C2_AXILITE_FW"  address="auto"  fwinfo="uio_endpoint"  module="file://modules_rev2a_xczu7ev/C2C2_AXILITE_FW.xml"                  />
+  <node id="C2C2_AXI_FW"      address="auto"  fwinfo="uio_endpoint"  module="file://modules_rev2a_xczu7ev/C2C2_AXI_FW.xml"                  />
+  <node id="CM"               address="auto"  fwinfo="uio_endpoint"  module="file://modules_rev2a_xczu7ev/CM_USP.xml"                    />
+  <node id="CM_MON_AXI_FW"    address="auto"  fwinfo="uio_endpoint"  module="file://modules_rev2a_xczu7ev/CM_MON_AXI_FW.xml"                  />
+  <node id="INT_AXI_FW"       address="auto"  fwinfo="uio_endpoint"  module="file://modules_rev2a_xczu7ev/INT_AXI_FW.xml"                  />
+  <node id="MONITOR"          address="auto"  fwinfo="uio_endpoint"  module="file://modules_rev2a_xczu7ev/MONITOR_USP.xml"                  />
+  <node id="PLXVC"            address="auto"  fwinfo="uio_endpoint"  module="file://modules_rev2a_xczu7ev/plXVC_rev2.xml"                  />
+  <node id="PL_MEM"           address="auto"  fwinfo="uio_endpoint"  module="file://modules_rev2a_xczu7ev/PL_MEM.xml"                    />
+  <node id="SERV"             address="auto"  fwinfo="uio_endpoint"  module="file://modules_rev2a_xczu7ev/SERV_rev2a.xml"                  />
+  <node id="SLAVE_I2C"        address="auto"  fwinfo="uio_endpoint"  module="file://modules_rev2a_xczu7ev/SLAVE_I2C.xml"                  />
+  <node id="SM_INFO"          address="auto"  fwinfo="uio_endpoint"  module="file://modules_rev2a_xczu7ev/FW_INFO.xml"                   />
+</node>

@@ -1,0 +1,1 @@
+/usr/bin/gcc -lrt -g -rdynamic CMakeFiles/clock_sync_320M_WIB.dir/clock_sync.c.o CMakeFiles/clock_sync_320M_WIB.dir/toml.c.o "CMakeFiles/clock_sync_320M_WIB.dir/i2c-chip.c.o" CMakeFiles/clock_sync_320M_WIB.dir/semaphore.c.o -o clock_sync_320M_WIB 
