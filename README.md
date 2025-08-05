@@ -10,7 +10,7 @@ The IPMC paramaters are initally set over serial.
 
 This script is run on adpsun1 at BU.
 ### Requirements
-Make sure to use a virtaul environment if this script is being run as root.
+Make sure to use a virtual environment if this script is being run as root.
 - **Python 3+**
 - **pyserial** 
 
@@ -22,7 +22,28 @@ python3 program_ipmc.py
 Enter the serial number into the prompt.
 
 ### Results
-Verify the result by connecting to the IPMC directly with screen.
+Verify IPMC parameters were set correctly by connecting to the IPMC directly with screen.
+
+## BootMedia
+### Overview
+The sd card and the ssd are loaded with the latest FW and FS.
+
+This script is run on adpsun1 at BU.
+### Requirements
+### Instructions
+Place the latest FS from https://apollo-lhc.gitlab.io/SM_Filesystem/01-location/ in the BootMedia folder.
+
+Plug in the sd card.
+```
+sudo ./make_sd_zynq.sh /dev/sdX [service module serial number]
+```
+This will load the FS and FW onto the SD card.
+
+Plug in the ssd.
+```
+sudo ./make_ssd.sh /dev/sdX
+```
+This will load the FS onto the sdd.
 
 
 ## SM MGT Script
