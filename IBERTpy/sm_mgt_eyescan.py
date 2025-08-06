@@ -344,7 +344,7 @@ if __name__ == "__main__":
     vivado_thread.start()
     
     # Call function with user-provided hostname
-    if not args.no_change_fw or not args.vivado:
+    if not args.no_change_fw and not args.vivado:
         print("Starting clock function...")
         program_clocks(hostname, password=password if password else None)
 
