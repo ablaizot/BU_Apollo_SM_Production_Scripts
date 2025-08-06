@@ -322,6 +322,7 @@ if __name__ == "__main__":
     # delete ip.dat file
     args = parse_cli()
 
+    print(args.vivado)
     if os.path.exists('ip.dat') and not args.vivado:
         os.remove('ip.dat')
 

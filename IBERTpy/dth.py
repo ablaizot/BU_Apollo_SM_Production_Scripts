@@ -15,6 +15,17 @@ import time
 import argparse
 import paramiko
 
+import os, sys
+
+class HiddenPrints:
+    def __enter__(self):
+        self._original_stdout = sys.stdout
+        sys.stdout = open(os.devnull, 'w')
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        sys.stdout.close()
+        sys.stdout = self._original_stdout
+
 def run_dth_flashy(hostname, username='root', password=None):
     """
     Run DTH_Flashy.py --fpga tcds on remote machine
@@ -31,14 +42,17 @@ def run_dth_flashy(hostname, username='root', password=None):
             connect_kwargs={"password": password}
         ) as conn:
             print("Running DTH_Flashy.py --fpga tcds, Wait 3 minutes and press enter to continue")
-            result = conn.run('ablaizot/dth.sh')
+
+            with HiddenPrints():
+                result = conn.run('ablaizot/dth.sh')
+
             conn.run('tcds2_dth_driver id')
             conn.close()
     except Exception as e:
-        print(f"Error running DTH_Flashy.py: {str(e)}")
+        #print(f"Error running DTH_Flashy.py: {str(e)}")
         print("Reloading Driver")
         conn.run("tcds2_dth_driver reload")
-        time.sleep(240)
+        time.sleep(180)
         conn.run("tcds2_dth_driver links init")
 
         conn.close()
@@ -57,7 +71,6 @@ def run_vivado(hostname='local', sleep_time=0):
         
         print("Starting Vivado...")
         subprocess.run(cmd, check=True)
-
 
     except Exception as e:
         print(f"Error running Vivado: {str(e)}")
