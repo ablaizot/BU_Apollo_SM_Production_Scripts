@@ -187,8 +187,13 @@ def main():
         print("Timeout waiting for PDF file generation")
 
     # Wait for Vivado thread to complete
-    clock_thread.join()
-    vivado_thread.join()
+
+    try:
+        clock_thread.join()
+        vivado_thread.join()
+        print("All threads completed successfully.")
+    except Exception as e:
+        print(f"Error in threads: {str(e)}, but should be good to proceed with scoping.")
 
 if __name__ == "__main__":
     main()
