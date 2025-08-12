@@ -43,8 +43,10 @@ def run_dth_flashy(hostname, username='root', password=None):
         ) as conn:
             print("Running DTH_Flashy.py --fpga tcds, Wait 3 minutes and press enter to continue")
 
+            conn.put('dth.sh','/home/DTH', preserve_mode=True)
+
             with HiddenPrints():
-                result = conn.run('ablaizot/dth.sh')
+                result = conn.run('dth.sh')
 
             conn.run('tcds2_dth_driver id')
             conn.close()
